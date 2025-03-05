@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-namespace WarehouseProject.Models.Entity {
-    public partial class Category {
-        public Category() {
+namespace WarehouseProject.Models
+{
+    public partial class Category
+    {
+        public Category()
+        {
             Products = new HashSet<Product>();
         }
 
@@ -13,6 +17,7 @@ namespace WarehouseProject.Models.Entity {
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Product> Products { get; set; }
     }
 }

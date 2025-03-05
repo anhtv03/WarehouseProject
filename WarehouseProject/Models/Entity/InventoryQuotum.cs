@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WarehouseProject.Models.Entity {
-    public partial class InventoryQuotum {
+namespace WarehouseProject.Models
+{
+    public partial class InventoryQuotum
+    {
         public int QuotaId { get; set; }
         public int ProductId { get; set; }
         public int Quantity { get; set; }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WarehouseProject.Models.Entity {
-    public partial class InventoryHistory {
+namespace WarehouseProject.Models
+{
+    public partial class InventoryHistory
+    {
         public int HistoryId { get; set; }
         public int ProductId { get; set; }
         public int? OrderId { get; set; }
@@ -16,7 +18,6 @@ namespace WarehouseProject.Models.Entity {
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
-        public virtual Order? Order { get; set; }
         public virtual Product Product { get; set; } = null!;
         public virtual User User { get; set; } = null!;
     }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WarehouseProject.Models.Entity {
-    public partial class User {
-        public User() {
+namespace WarehouseProject.Models
+{
+    public partial class User
+    {
+        public User()
+        {
             InventoryHistories = new HashSet<InventoryHistory>();
-            Orders = new HashSet<Order>();
         }
 
         public int UserId { get; set; }
@@ -21,6 +23,5 @@ namespace WarehouseProject.Models.Entity {
 
         public virtual Role? RoleNavigation { get; set; }
         public virtual ICollection<InventoryHistory> InventoryHistories { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
     }
 }
