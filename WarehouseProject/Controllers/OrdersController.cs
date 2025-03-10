@@ -2,13 +2,12 @@
 using WarehouseProject.Models.DTOs;
 using WarehouseProject.Services;
 
-
 namespace WarehouseProject.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase {
-        private readonly ICategoryService _service;
-        public CategoriesController(ICategoryService service) {
+    public class OrdersController : ControllerBase {
+        private readonly IOrderService _service;
+        public OrdersController(IOrderService service) {
             _service = service;
         }
 
@@ -24,7 +23,7 @@ namespace WarehouseProject.Controllers {
                 var data = _service.GetDetail(id);
 
                 if (data == null) {
-                    return NotFound("Category is not exised");
+                    return NotFound("Order is not exised");
                 }
 
                 return Ok(data);
@@ -34,9 +33,9 @@ namespace WarehouseProject.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] CategoryDTO categoryForm) {
+        public ActionResult Create([FromBody] OrderDTO order) {
             try {
-                var result = _service.Create(categoryForm);
+                var result = _service.Create(order);
                 if (result.isSuccess) {
                     return Created("", result.message);
                 } else {
@@ -48,9 +47,9 @@ namespace WarehouseProject.Controllers {
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update([FromRoute] int id, [FromBody] CategoryDTO categoryForm) {
+        public ActionResult Update([FromRoute] int id, [FromBody] OrderDTO order) {
             try {
-                var result = _service.Update(id, categoryForm);
+                var result = _service.Update(id, order);
                 if (result.isSuccess) {
                     return Ok(result.message);
                 } else {

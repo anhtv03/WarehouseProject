@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using WarehouseProject.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using WarehouseProject.Models.DTOs;
-using WarehouseProject.Models.Form;
 using WarehouseProject.Services;
 
 namespace WarehouseProject.Controllers {
@@ -19,7 +16,7 @@ namespace WarehouseProject.Controllers {
             var list = _service.GetAll(search);
             return Ok(list);
         }
-        
+
         [HttpGet("Category/{id}")]
         public ActionResult GetAllByCategory([FromRoute] int id) {
             var list = _service.GetProductByCategory(id);
@@ -44,8 +41,12 @@ namespace WarehouseProject.Controllers {
         [HttpPost]
         public ActionResult Create([FromBody] ProductDTO product) {
             try {
-                _service.Create(product);
-                return Created("", "Created success");
+                var result = _service.Create(product);
+                if (result.isSuccess) {
+                    return Created("", result.message);
+                } else {
+                    return BadRequest(result.message);
+                }
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
@@ -54,8 +55,12 @@ namespace WarehouseProject.Controllers {
         [HttpPut("{id}")]
         public ActionResult Update([FromRoute] int id, [FromBody] ProductDTO product) {
             try {
-                _service.Update(id, product);
-                return Ok("Update success");
+                var result = _service.Update(id, product);
+                if (result.isSuccess) {
+                    return Ok(result.message);
+                } else {
+                    return BadRequest(result.message);
+                }
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
@@ -64,8 +69,12 @@ namespace WarehouseProject.Controllers {
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id) {
             try {
-                _service.Delete(id);
-                return Ok("Delete success");
+                var result = _service.Delete(id);
+                if (result.isSuccess) {
+                    return Ok(result.message);
+                } else {
+                    return BadRequest(result.message);
+                }
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }

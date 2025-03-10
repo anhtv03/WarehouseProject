@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace WarehouseProject.Models
+namespace WarehouseProject.Models.Entity
 {
     public partial class Category
     {

@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
-namespace WarehouseProject.Models.Form {
+namespace WarehouseProject.Models.DTOs {
 
     public class SupplierDTO {
         [Required(ErrorMessage = "Supplier name is required.")]
         [MaxLength(100, ErrorMessage = "Name cannot exceed 100 characters.")]
         public string Name { get; set; } = null!;
 
-        [MaxLength(15, ErrorMessage = "Phone number cannot exceed 15 characters.")]
+        [MaxLength(10, ErrorMessage = "Phone number cannot exceed 10 characters.")]
         [Phone(ErrorMessage = "Invalid phone number format.")]
         public string? Phone { get; set; }
 

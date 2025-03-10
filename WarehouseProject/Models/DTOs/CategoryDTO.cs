@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WarehouseProject.Models.Form {
+namespace WarehouseProject.Models.DTOs {
 
     public class CategoryDTO {
 

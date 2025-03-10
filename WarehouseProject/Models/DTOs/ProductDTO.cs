@@ -10,7 +10,7 @@ namespace WarehouseProject.Models.DTOs {
         public string? Description { get; set; }
 
         [MaxLength(255, ErrorMessage = "Images URL cannot exceed 255 characters.")]
-        [Url(ErrorMessage = "Images must be a valid URL.")] 
+        //[Url(ErrorMessage = "Images must be a valid URL.")] 
         public string? Images { get; set; }
 
         [MaxLength(20, ErrorMessage = "Unit cannot exceed 20 characters.")]

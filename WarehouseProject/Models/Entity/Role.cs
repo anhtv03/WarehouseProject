@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
-namespace WarehouseProject.Models
+namespace WarehouseProject.Models.Entity
 {
     public partial class Role
     {
@@ -16,7 +15,6 @@ namespace WarehouseProject.Models
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
-        [JsonIgnore]
         public virtual ICollection<User> Users { get; set; }
     }
 }

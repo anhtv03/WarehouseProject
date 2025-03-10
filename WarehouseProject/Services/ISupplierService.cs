@@ -1,5 +1,5 @@
-﻿using WarehouseProject.Models.Form;
-using WarehouseProject.Models;
+﻿using WarehouseProject.Models.DTOs;
+using WarehouseProject.Models.Entity;
 
 namespace WarehouseProject.Services {
     public interface ISupplierService {

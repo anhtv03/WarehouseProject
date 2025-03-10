@@ -7,6 +7,8 @@ using WarehouseProject.Services;
 using WarehouseProject.Services.ServicesImp;
 using WarehouseProject.Util;
 using WarehouseProject.Controllers;
+using WarehouseProject.Models.Entity;
+using System.Text.Json.Serialization;
 
 namespace WarehouseProject {
     public class Program {
@@ -26,10 +28,27 @@ namespace WarehouseProject {
             // Register seed data
             builder.Services.AddScoped<SeedData>();
 
+            // Register session
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             // Register service
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<ISupplierService, SupplierService>();
             builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
+
+            // Register JsonIgnore
+            builder.Services.AddControllers()
+                .AddJsonOptions(options => {
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                    options.JsonSerializerOptions.WriteIndented = true;
+                });
 
             //------------------
             builder.Services.AddControllers();
@@ -45,13 +64,14 @@ namespace WarehouseProject {
             }
 
             app.UseAuthorization();
-
+            app.UseSession();
 
             app.MapControllers();
 
             using (var scope = app.Services.CreateScope()) {
                 var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
                 seedData.SeedRole();
+                seedData.AddAdmin();
             }
 
             app.Run();

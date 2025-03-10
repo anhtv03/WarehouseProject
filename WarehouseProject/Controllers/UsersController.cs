@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using WarehouseProject.Models.DTOs;
 using WarehouseProject.Services;
-
 
 namespace WarehouseProject.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase {
-        private readonly ICategoryService _service;
-        public CategoriesController(ICategoryService service) {
+    public class UsersController : ControllerBase {
+        private readonly IUserService _service;
+        public UsersController(IUserService service) {
             _service = service;
         }
 
@@ -24,7 +24,7 @@ namespace WarehouseProject.Controllers {
                 var data = _service.GetDetail(id);
 
                 if (data == null) {
-                    return NotFound("Category is not exised");
+                    return NotFound("User is not exised");
                 }
 
                 return Ok(data);
@@ -33,10 +33,24 @@ namespace WarehouseProject.Controllers {
             }
         }
 
-        [HttpPost]
-        public ActionResult Create([FromBody] CategoryDTO categoryForm) {
+        [HttpPost("/Login")]
+        public ActionResult Login([FromBody] LoginDTO user) {
             try {
-                var result = _service.Create(categoryForm);
+                var result = _service.Login(user, HttpContext);
+                if (result.isSuccess) {
+                    return Ok(result.message);
+                } else {
+                    return BadRequest(result.message);
+                }
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("Register")]
+        public ActionResult Create([FromBody] RegisterDTO user) {
+            try {
+                var result = _service.Create(user);
                 if (result.isSuccess) {
                     return Created("", result.message);
                 } else {
@@ -48,9 +62,9 @@ namespace WarehouseProject.Controllers {
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update([FromRoute] int id, [FromBody] CategoryDTO categoryForm) {
+        public ActionResult Update([FromRoute] int id, [FromBody] UserDTO user) {
             try {
-                var result = _service.Update(id, categoryForm);
+                var result = _service.Update(id, user);
                 if (result.isSuccess) {
                     return Ok(result.message);
                 } else {
@@ -74,5 +88,6 @@ namespace WarehouseProject.Controllers {
                 return BadRequest(ex.Message);
             }
         }
+
     }
 }

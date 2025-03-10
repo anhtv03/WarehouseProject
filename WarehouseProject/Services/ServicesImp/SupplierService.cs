@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WarehouseProject.Models;
-using WarehouseProject.Models.Form;
+﻿using WarehouseProject.Models.DTOs;
+using WarehouseProject.Models.Entity;
 
 namespace WarehouseProject.Services.ServicesImp {
     public class SupplierService : ISupplierService {
@@ -38,6 +37,7 @@ namespace WarehouseProject.Services.ServicesImp {
                     return (false, "No supplier found to delete");
                 }
 
+                _context.Products.Where(x => x.SupplierId == id).ToList().ForEach(x => x.SupplierId = null);
                 _context.Suppliers.Remove(supplier);
                 _context.SaveChanges();
                 return (true, "Delete Successful");

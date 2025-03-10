@@ -1,5 +1,7 @@
-﻿using WarehouseProject.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using WarehouseProject.Models;
 using WarehouseProject.Models.DTOs;
+using WarehouseProject.Models.Entity;
 
 namespace WarehouseProject.Services.ServicesImp {
     public class ProductService : IProductService {
@@ -15,10 +17,10 @@ namespace WarehouseProject.Services.ServicesImp {
             try {
 
                 if (entity.CategoryId.HasValue && !_context.Categories.Any(c => c.CategoryId == entity.CategoryId)) {
-                    return (false, "Category ID does not exist.");
+                    return (false, "Category does not exist.");
                 }
                 if (entity.SupplierId.HasValue && !_context.Suppliers.Any(s => s.SupplierId == entity.SupplierId)) {
-                    return (false, "Supplier ID does not exist.");
+                    return (false, "Supplier does not exist.");
                 }
 
                 var product = new Product {
@@ -52,6 +54,7 @@ namespace WarehouseProject.Services.ServicesImp {
                     return (false, "No found to delete.");
                 }
 
+                _context.OrderDetails.Where(x => x.ProductId == id).ToList().ForEach(x => x.ProductId = null);
                 _context.Products.Remove(product);
                 _context.SaveChanges();
                 return (true, "Delete successful");
@@ -71,7 +74,9 @@ namespace WarehouseProject.Services.ServicesImp {
 
                 query = query.OrderByDescending(p => p.CreatedAt);
 
-                return query.ToList();
+                return query.Include(x => x.Category)
+                            .Include(x => x.Supplier)
+                            .ToList();
             } catch (Exception ex) {
                 throw new Exception(ex.Message);
             }
@@ -79,7 +84,10 @@ namespace WarehouseProject.Services.ServicesImp {
 
         public Product GetDetail(int id) {
             try {
-                var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+                var product = _context.Products
+                                    .Include(x => x.Category)
+                                    .Include(x => x.Supplier)
+                                    .FirstOrDefault(p => p.ProductId == id);
                 return product;
             } catch (Exception ex) {
                 throw new Exception(ex.Message);
@@ -107,10 +115,10 @@ namespace WarehouseProject.Services.ServicesImp {
                 }
 
                 if (entity.CategoryId.HasValue && !_context.Categories.Any(c => c.CategoryId == entity.CategoryId)) {
-                    return (false, "Category ID does not exist.");
+                    return (false, "Category does not exist.");
                 }
                 if (entity.SupplierId.HasValue && !_context.Suppliers.Any(s => s.SupplierId == entity.SupplierId)) {
-                    return (false, "Supplier ID does not exist.");
+                    return (false, "Supplier does not exist.");
                 }
 
                 product.Name = entity.Name;

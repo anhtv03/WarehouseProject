@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-namespace WarehouseProject.Models
+namespace WarehouseProject.Models.Entity
 {
     public partial class User
     {
         public User()
         {
-            InventoryHistories = new HashSet<InventoryHistory>();
+            Orders = new HashSet<Order>();
         }
 
         public int UserId { get; set; }
@@ -21,7 +22,10 @@ namespace WarehouseProject.Models
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
+        [JsonIgnore]
         public virtual Role? RoleNavigation { get; set; }
-        public virtual ICollection<InventoryHistory> InventoryHistories { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

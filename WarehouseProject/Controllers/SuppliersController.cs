@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using WarehouseProject.Models;
-using WarehouseProject.Models.Form;
+﻿using Microsoft.AspNetCore.Mvc;
+using WarehouseProject.Models.DTOs;
 using WarehouseProject.Services;
 
 namespace WarehouseProject.Controllers {
@@ -37,8 +35,12 @@ namespace WarehouseProject.Controllers {
         [HttpPost]
         public ActionResult Create([FromBody] SupplierDTO supplier) {
             try {
-                _service.Create(supplier);
-                return Created("", "Created success");
+                var result = _service.Create(supplier);
+                if (result.isSuccess) {
+                    return Created("", result.message);
+                } else {
+                    return BadRequest(result.message);
+                }
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
@@ -47,8 +49,12 @@ namespace WarehouseProject.Controllers {
         [HttpPut("{id}")]
         public ActionResult Update([FromRoute] int id, [FromBody] SupplierDTO supplier) {
             try {
-                _service.Update(id, supplier);
-                return Ok("Update success");
+                var result = _service.Update(id, supplier);
+                if (result.isSuccess) {
+                    return Ok(result.message);
+                } else {
+                    return BadRequest(result.message);
+                }
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
@@ -57,8 +63,12 @@ namespace WarehouseProject.Controllers {
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id) {
             try {
-                _service.Delete(id);
-                return Ok("Delete success");
+                var result = _service.Delete(id);
+                if (result.isSuccess) {
+                    return Ok(result.message);
+                } else {
+                    return BadRequest(result.message);
+                }
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }

@@ -1,4 +1,6 @@
-﻿using WarehouseProject.Models;
+﻿using BCrypt.Net;
+using WarehouseProject.Models;
+using WarehouseProject.Models.Entity;
 
 namespace WarehouseProject.Util {
     public class SeedData {
@@ -16,6 +18,18 @@ namespace WarehouseProject.Util {
                     };
 
                 _context.Roles.AddRange(roles);
+                _context.SaveChanges();
+            }
+        }
+
+        public void AddAdmin() {
+            if (!_context.Users.Any()) {
+                User user = new User {
+                    Username = "admin",
+                    Password = BCrypt.Net.BCrypt.HashPassword("admin"),
+                    Role = 1
+                };
+                _context.Users.Add(user);
                 _context.SaveChanges();
             }
         }

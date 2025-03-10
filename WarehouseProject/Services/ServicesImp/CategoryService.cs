@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WarehouseProject.Models;
-using WarehouseProject.Models.Form;
+using WarehouseProject.Models.DTOs;
+using WarehouseProject.Models.Entity;
 
 namespace WarehouseProject.Services.ServicesImp {
     public class CategoryService : ICategoryService {
@@ -37,6 +38,7 @@ namespace WarehouseProject.Services.ServicesImp {
                     return (false, "No found to update");
                 }
 
+                _context.Products.Where(x => x.CategoryId == id).ToList().ForEach(x => x.CategoryId = null);
                 _context.Categories.Remove(category);
                 _context.SaveChanges();
                 return (true, "Delete Successful");

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WarehouseProject.Models;
+using WarehouseProject.Models.Entity;
 using WarehouseProject.Services;
 
 namespace WarehouseProject.Controllers {
