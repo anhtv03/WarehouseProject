@@ -16,7 +16,6 @@ namespace WarehouseFrontEnd.Models.Entity
         public string? Description { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-
         [JsonIgnore]
         public virtual ICollection<Product> Products { get; set; }
     }

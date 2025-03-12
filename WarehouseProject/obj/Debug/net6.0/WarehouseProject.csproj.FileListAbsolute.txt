@@ -253,7 +253,6 @@ F:\C#.NET\PRN231\WarehouseProject\WarehouseProject\bin\Debug\net6.0\zh-Hans\Micr
 F:\C#.NET\PRN231\WarehouseProject\WarehouseProject\bin\Debug\net6.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 F:\C#.NET\PRN231\WarehouseProject\WarehouseProject\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
 F:\C#.NET\PRN231\WarehouseProject\WarehouseProject\bin\Debug\net6.0\BCrypt.Net-Next.dll
-F:\C#.NET\PRN231\WarehouseProject\WarehouseProject\obj\Debug\net6.0\staticwebassets.upToDateCheck.txt
 D:\ASPNET & ANGULAR\ASPNET\ASPNET CORE WEB API\WarehouseProject\WarehouseProject\bin\Debug\net6.0\appsettings.Development.json
 D:\ASPNET & ANGULAR\ASPNET\ASPNET CORE WEB API\WarehouseProject\WarehouseProject\bin\Debug\net6.0\WarehouseProject.staticwebassets.endpoints.json
 D:\ASPNET & ANGULAR\ASPNET\ASPNET CORE WEB API\WarehouseProject\WarehouseProject\bin\Debug\net6.0\WarehouseProject.exe
@@ -510,3 +509,4 @@ D:\ASPNET & ANGULAR\ASPNET\ASPNET CORE WEB API\WarehouseProject\WarehouseProject
 D:\ASPNET & ANGULAR\ASPNET\ASPNET CORE WEB API\WarehouseProject\WarehouseProject\obj\Debug\net6.0\WarehouseProject.pdb
 D:\ASPNET & ANGULAR\ASPNET\ASPNET CORE WEB API\WarehouseProject\WarehouseProject\obj\Debug\net6.0\WarehouseProject.genruntimeconfig.cache
 D:\ASPNET & ANGULAR\ASPNET\ASPNET CORE WEB API\WarehouseProject\WarehouseProject\obj\Debug\net6.0\ref\WarehouseProject.dll
+F:\C#.NET\PRN231\WarehouseProject\WarehouseProject\obj\Debug\net6.0\staticwebassets.upToDateCheck.txt
