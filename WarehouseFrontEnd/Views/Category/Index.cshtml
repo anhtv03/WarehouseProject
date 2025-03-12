@@ -1,0 +1,104 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Danh sách danh mục";
+}
+
+<div class="main-content">
+    <div class="page-title">
+        <h2>Danh sách danh mục sản phẩm</h2>
+        <div>
+            <button id="addCategory" class="btn btn-primary" onclick="CreateCategory()">
+                <i class="fas fa-plus-circle"></i> Thêm danh mục
+            </button>
+        </div>
+    </div>
+
+
+    <div class="product-table">
+        <ul class="nav nav-tabs tab-menu">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Tất cả</a>
+            </li>
+        </ul>
+
+        <div class="p-3">
+            @* ----------------search-------------------- *@
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" id="searchText" name="query" value="@ViewBag.SearchValue" class="form-control border-start-0" placeholder="Tìm kiếm theo tên danh mục" onchange="getSearch()">
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
+            </div>
+
+            @* -------------------table--------------------- *@
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px"></th>
+                            <th>Tên Danh Mục</th>
+                            <th>Mô Tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.Categories)
+                        {
+                            <tr>
+                                <td></td>
+                                <td><a asp-action="Details" asp-controller="Category" asp-route-id="@item.CategoryId" class="text-primary">@item.Name</a></td>
+                                <td>@item.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        // Handling selectAll checkbox
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAllCheckbox = document.querySelector('thead input[type="checkbox"]');
+            const itemCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+
+            selectAllCheckbox.addEventListener('change', function() {
+                const isChecked = this.checked;
+                itemCheckboxes.forEach(checkbox => {
+                    checkbox.checked = isChecked;
+                });
+            });
+
+            itemCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const allChecked = Array.from(itemCheckboxes).every(cb => cb.checked);
+                    const someChecked = Array.from(itemCheckboxes).some(cb => cb.checked);
+
+                    selectAllCheckbox.checked = allChecked;
+                    selectAllCheckbox.indeterminate = someChecked && !allChecked;
+                });
+            });
+        });
+
+        function CreateCategory(){
+            const categoryIndexUrl = '@Url.Action("Create", "Category")';
+            console.log(categoryIndexUrl);
+            window.location.href = `${categoryIndexUrl}`;
+        }
+
+        const categoryIndexUrl = '@Url.Action("Index", "Category")';
+        function getSearch(){
+            const search = document.getElementById('searchText');
+            const searchValue = search.value.trim();
+            window.location.href = `${categoryIndexUrl}?query=${encodeURIComponent(searchValue)}`;
+        }
+    </script>
+}

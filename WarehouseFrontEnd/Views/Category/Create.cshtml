@@ -1,0 +1,56 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Tạo danh mục mới";
+}
+@model Category
+
+<div class="main-content">
+    <div class="page-title">
+        <h2>Tạo danh mục sản phẩm mới</h2>
+        <div>
+            <a asp-action="Index" asp-controller="Category" class="btn btn-outline-secondary me-2">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
+        </div>
+    </div>
+
+    <div class="product-detail">
+        <!-- Create Mode -->
+        <div id="createMode" class="card">
+            <div class="card-body">
+                <form id="createCategoryForm" asp-action="Create" asp-controller="Category" method="post">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label asp-for="Name" class="form-label">Tên danh mục</label>
+                                <input type="text" class="form-control" asp-for="Name" required>
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label">Mô tả danh mục</label>
+                                <textarea class="form-control" asp-for="Description" rows="5"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3 mt-4">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-save"></i> Tạo danh mục
+                                </button>
+                                <button type="button" id="cancelCreate" class="btn btn-outline-secondary w-100 mt-2">
+                                    <i class="fas fa-times"></i> Hủy tạo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
