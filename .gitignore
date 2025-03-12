@@ -1,0 +1,12 @@
+# Bỏ qua thư mục obj và bin ở mọi cấp
+*/obj/
+*/bin/
+
+# Bỏ qua file tạm của Visual Studio
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+# Bỏ qua thư mục build
+build/
