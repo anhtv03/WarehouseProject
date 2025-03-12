@@ -319,17 +319,28 @@
   },
   {
     "ContainingType": "WarehouseProject.Controllers.OrdersController",
-    "Method": "GetAll",
-    "RelativePath": "api/Orders/{role}",
+    "Method": "GetInbound",
+    "RelativePath": "api/Orders/Inbound",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "role",
-        "Type": "WarehouseProject.Util.OrderTypeEnum",
-        "IsRequired": true
-      },
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseProject.Controllers.OrdersController",
+    "Method": "GetOutbound",
+    "RelativePath": "api/Orders/Outbound",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
         "Name": "search",
         "Type": "System.String",

@@ -12,9 +12,15 @@ namespace WarehouseProject.Controllers {
             _service = service;
         }
 
-        [HttpGet("{role}")]
-        public ActionResult GetAll([FromRoute] OrderTypeEnum role, [FromQuery] string? search) {
-            var list = _service.GetAll(role, search);
+        [HttpGet("Inbound")]
+        public ActionResult GetInbound([FromQuery] string? search) {
+            var list = _service.GetAll(OrderTypeEnum.Inbound, search);
+            return Ok(list);
+        }
+
+        [HttpGet("Outbound")]
+        public ActionResult GetOutbound([FromQuery] string? search) {
+            var list = _service.GetAll(OrderTypeEnum.Outbound, search);
             return Ok(list);
         }
 

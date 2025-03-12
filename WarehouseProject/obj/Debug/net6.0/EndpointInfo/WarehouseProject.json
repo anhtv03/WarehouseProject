@@ -398,20 +398,33 @@
         }
       }
     },
-    "/api/Orders/{role}": {
+    "/api/Orders/Inbound": {
       "get": {
         "tags": [
           "Orders"
         ],
         "parameters": [
           {
-            "name": "role",
-            "in": "path",
-            "required": true,
+            "name": "search",
+            "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/OrderTypeEnum"
+              "type": "string"
             }
-          },
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Orders/Outbound": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "parameters": [
           {
             "name": "search",
             "in": "query",
@@ -1273,15 +1286,13 @@
         "additionalProperties": false
       },
       "OrderDTO": {
-        "required": [
-          "status"
-        ],
         "type": "object",
         "properties": {
           "status": {
             "maxLength": 50,
             "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "userId": {
             "maximum": 2147483647,
@@ -1311,7 +1322,8 @@
             "nullable": true
           },
           "orderType": {
-            "$ref": "#/components/schemas/OrderTypeEnum"
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1344,14 +1356,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "OrderTypeEnum": {
-        "enum": [
-          0,
-          1
-        ],
-        "type": "integer",
-        "format": "int32"
       },
       "RegisterDTO": {
         "required": [

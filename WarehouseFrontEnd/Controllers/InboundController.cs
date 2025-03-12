@@ -7,22 +7,23 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WarehouseFrontEnd.Controllers {
     public class InboundController : Controller {
-        private readonly string urlOrder = "https://localhost:5100/api/Orders";
+        private readonly string urlInbound = "https://localhost:5100/api/Orders/Inbound";
         private readonly string urlCategory = "https://localhost:5100/api/Categories";
         private readonly string urlSupplier = "https://localhost:5100/api/Suppliers";
 
-        public async Task<IActionResult> IndexAsync(string? search) {
+        public async Task<IActionResult> Index(string? search) {
             UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
             if (current_user == null) {
                 return RedirectToAction("Index", "Auth");
             } else {
                 ViewBag.CurrentUser = current_user;
             }
+
             List<Order> list = new List<Order>();
             if (search != null) {
-                list = await LoadDataAsync<Order>($"{urlOrder}?search={search}");
+                list = await LoadDataAsync<Order>($"{urlInbound}?search={search}");
             } else {
-                list = await LoadDataAsync<Order>(urlOrder);
+                list = await LoadDataAsync<Order>(urlInbound);
             }
 
             ViewBag.Inbound = list;
@@ -45,7 +46,7 @@ namespace WarehouseFrontEnd.Controllers {
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection) {
             try {
-                return RedirectToAction(nameof(IndexAsync));
+                return RedirectToAction(nameof(Index));
             } catch {
                 return View();
             }
@@ -61,7 +62,7 @@ namespace WarehouseFrontEnd.Controllers {
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection) {
             try {
-                return RedirectToAction(nameof(IndexAsync));
+                return RedirectToAction(nameof(Index));
             } catch {
                 return View();
             }
@@ -77,7 +78,7 @@ namespace WarehouseFrontEnd.Controllers {
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection) {
             try {
-                return RedirectToAction(nameof(IndexAsync));
+                return RedirectToAction(nameof(Index));
             } catch {
                 return View();
             }
