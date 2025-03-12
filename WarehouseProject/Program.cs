@@ -1,6 +1,4 @@
-﻿
-
-using CloudinaryDotNet;
+﻿using CloudinaryDotNet;
 using Microsoft.EntityFrameworkCore;
 using WarehouseProject.Models;
 using WarehouseProject.Services;

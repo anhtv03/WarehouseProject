@@ -39,9 +39,10 @@ namespace WarehouseProject.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] ProductDTO product) {
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Create([FromForm] ProductDTO product, IFormFile? file) {
             try {
-                var result = _service.Create(product);
+                var result = await _service.CreateAsync(product, file);
                 if (result.isSuccess) {
                     return Created("", result.message);
                 } else {
@@ -53,9 +54,10 @@ namespace WarehouseProject.Controllers {
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update([FromRoute] int id, [FromBody] ProductDTO product) {
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromForm] ProductDTO product, IFormFile? file) {
             try {
-                var result = _service.Update(id, product);
+                var result = await _service.UpdateAsync(id, product, file);
                 if (result.isSuccess) {
                     return Ok(result.message);
                 } else {

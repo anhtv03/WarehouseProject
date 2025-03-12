@@ -1,0 +1,138 @@
+﻿@using WarehouseFrontEnd.Models.DTOs;
+@model LoginDTO;
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Hệ thống Quản lý Kho</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(135deg, #6B8DD6 0%, #8E37D7 100%);
+        }
+
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+            .logo img {
+                width: 70%;
+                margin-bottom: 1rem;
+            }
+
+            .logo h1 {
+                color: #2c3e50;
+                font-size: 1.8rem;
+            }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+            input:focus {
+                outline: none;
+                border-color: #6B8DD6;
+                box-shadow: 0 0 0 3px rgba(107, 141, 214, 0.2);
+            }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: #6B8DD6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+            button:hover {
+                background: #5a7bc2;
+            }
+
+        .footer-links {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+            .footer-links a {
+                color: #6B8DD6;
+                text-decoration: none;
+                font-size: 0.9rem;
+            }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="https://res.cloudinary.com/djj5gopcs/image/upload/v1741619010/logo_kho_koy0xz.png" />
+            <h1>QUẢN LÝ KHO</h1>
+        </div>
+
+        <form asp-controller="Auth" asp-action="Login" method="post" id="loginForm">
+            <div class="form-group">
+                <label for="username">Tên đăng nhập</label>
+                <input type="text" id="username" name="Username" placeholder="Nhập tên đăng nhập" value="@Model?.Username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mật khẩu</label>
+                <input type="password" id="password" name="Password" placeholder="Nhập mật khẩu" value="@Model?.Password" required>
+            </div>
+            @Html.ValidationSummary(false, "", new { @class = "error-message" })
+            <button type="submit">ĐĂNG NHẬP</button>
+        </form>
+        @* 
+        <div class="footer-links">
+            <a href="#">Quên mật khẩu?</a>
+        </div> *@
+    </div>
+
+</body>
+</html>

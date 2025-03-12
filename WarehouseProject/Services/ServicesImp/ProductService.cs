@@ -1,32 +1,45 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
+using Microsoft.EntityFrameworkCore;
 using WarehouseProject.Models;
 using WarehouseProject.Models.DTOs;
 using WarehouseProject.Models.Entity;
+using System.Text;
+using System.Security.Cryptography;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WarehouseProject.Services.ServicesImp {
     public class ProductService : IProductService {
         private readonly WarehouseDBContext _context;
+        private readonly Cloudinary _cloudinary;
 
-        public ProductService(WarehouseDBContext context) {
+        public ProductService(WarehouseDBContext context, Cloudinary cloudinary) {
             _context = context;
+            _cloudinary = cloudinary;
         }
 
         //====================================================================================================
 
-        public (bool isSuccess, string message) Create(ProductDTO entity) {
+        public async Task<(bool isSuccess, string message)> CreateAsync(ProductDTO entity, IFormFile? image) {
             try {
-
                 if (entity.CategoryId.HasValue && !_context.Categories.Any(c => c.CategoryId == entity.CategoryId)) {
                     return (false, "Category does not exist.");
                 }
                 if (entity.SupplierId.HasValue && !_context.Suppliers.Any(s => s.SupplierId == entity.SupplierId)) {
                     return (false, "Supplier does not exist.");
                 }
+                string? imageUrl = null;
+                if (image != null) {
+                    imageUrl = await UploadImageAsync(image);
+                    if (imageUrl == null) {
+                        return (false, "Image upload failed.");
+                    }
+                }
 
                 var product = new Product {
                     Name = entity.Name,
                     Description = entity.Description,
-                    Images = entity.Images,
+                    Images = imageUrl,
                     Unit = entity.Unit,
                     Quantity = entity.Quantity ?? 0,
                     AvailableQuantity = entity.AvailableQuantity ?? 0,
@@ -106,24 +119,34 @@ namespace WarehouseProject.Services.ServicesImp {
             }
         }
 
-        public (bool isSuccess, string message) Update(int id, ProductDTO entity) {
+        public async Task<(bool isSuccess, string message)> UpdateAsync(int id, ProductDTO entity, IFormFile? image) {
             try {
-                var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+                var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
 
                 if (product == null) {
                     return (false, "No product found to update.");
                 }
 
-                if (entity.CategoryId.HasValue && !_context.Categories.Any(c => c.CategoryId == entity.CategoryId)) {
+                if (entity.CategoryId.HasValue && !await _context.Categories.AnyAsync(c => c.CategoryId == entity.CategoryId)) {
                     return (false, "Category does not exist.");
                 }
-                if (entity.SupplierId.HasValue && !_context.Suppliers.Any(s => s.SupplierId == entity.SupplierId)) {
+                if (entity.SupplierId.HasValue && !await _context.Suppliers.AnyAsync(s => s.SupplierId == entity.SupplierId)) {
                     return (false, "Supplier does not exist.");
+                }
+                string? imageUrl = null;
+                if (image != null) {
+                    imageUrl = await UploadImageAsync(image);
+                    if (imageUrl == null) {
+                        return (false, "Image upload failed.");
+                    }
+                    if (!string.IsNullOrEmpty(product.Images)) {
+                        await DeleteImageAsync(product.Images);
+                    }
                 }
 
                 product.Name = entity.Name;
                 product.Description = entity.Description;
-                product.Images = entity.Images;
+                product.Images = imageUrl == null ? entity.Images : imageUrl;
                 product.Unit = entity.Unit;
                 product.Quantity = entity.Quantity ?? product.Quantity;
                 product.AvailableQuantity = entity.AvailableQuantity ?? product.AvailableQuantity;
@@ -133,11 +156,61 @@ namespace WarehouseProject.Services.ServicesImp {
                 product.SupplierId = entity.SupplierId;
                 product.UpdatedAt = DateTime.Now;
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return (true, "Update Successful");
             } catch (Exception ex) {
                 return (false, ex.Message);
             }
         }
+
+        //============================================================================
+        public async Task<string?> UploadImageAsync(IFormFile image) {
+            long maxFileSize = 5 * 1024 * 1024;
+
+            if (image == null || image.Length == 0) {
+                return null;
+            }
+
+            if (image.Length > maxFileSize) {
+                return null;
+            }
+
+            try {
+                using (var stream = image.OpenReadStream()) {
+                    var uploadParams = new ImageUploadParams() {
+                        File = new FileDescription(image.FileName, stream),
+                        UploadPreset = "wmproject_img_products",
+                        UseFilename = true,
+                        UniqueFilename = true,
+                        Folder = "WarehouseProject"
+                    };
+
+                    var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                    return uploadResult.SecureUrl.ToString();
+                }
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        private async Task DeleteImageAsync(string imageUrl) {
+            try {
+                var uri = new Uri(imageUrl);
+                var pathSegments = uri.AbsolutePath.Split('/');
+                var folderAndFileName = string.Join("/", pathSegments.Skip(pathSegments.Length - 2));
+                var publicId = folderAndFileName.Substring(0, folderAndFileName.LastIndexOf('.'));
+
+                var deletionParams = new DeletionParams(publicId);
+                var result = await _cloudinary.DestroyAsync(deletionParams);
+
+                if (result.Result != "ok") {
+                    Console.WriteLine($"Failed to delete image: {result.Error?.Message}");
+                }
+            } catch (Exception ex) {
+                Console.WriteLine($"Error deleting image: {ex.Message}");
+            }
+        }
+
     }
 }

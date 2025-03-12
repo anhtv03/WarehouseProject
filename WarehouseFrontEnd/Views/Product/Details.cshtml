@@ -1,0 +1,244 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Chi tiết sản phẩm";
+}
+@model Product
+
+<div class="main-content">
+    <div class="page-title">
+        <h2>Chi tiết sản phẩm</h2>
+        <div>
+            <a asp-action="Index" asp-controller="Product" class="btn btn-outline-secondary me-2">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProductModal">
+                <i class="fas fa-trash"></i> Xóa
+            </button>
+        </div>
+    </div>
+
+    <div class="product-detail">
+        <!-- Edit Mode -->
+        <div id="editMode" class="card">
+            <div class="card-body">
+                <form id="editProductForm" asp-action="Edit" asp-controller="Product" asp-route-id="@Model.ProductId" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label asp-for="Name" class="form-label">Tên sản phẩm</label>
+                                <input type="text" class="form-control" asp-for="Name" required>
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="CategoryId" class="form-label">Loại sản phẩm</label>
+                                    <select class="form-select" asp-for="CategoryId" asp-items="@(new SelectList(ViewBag.Categories, "CategoryId", "Name"))">
+                                        <option value="">-- Chọn loại sản phẩm --</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="SupplierId" class="form-label">Nhà cung cấp</label>
+                                    <select class="form-select" asp-for="SupplierId" asp-items="@(new SelectList(ViewBag.Suppliers, "SupplierId", "Name"))">
+                                        <option value="">-- Chọn nhà cung cấp --</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="Price" class="form-label">Giá bán</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" asp-for="Price" required>
+                                        <span class="input-group-text">VND</span>
+                                    </div>
+                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="CostPrice" class="form-label">Giá nhập</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" asp-for="CostPrice" required>
+                                        <span class="input-group-text">VND</span>
+                                    </div>
+                                    <span asp-validation-for="CostPrice" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="Quantity" class="form-label">Số lượng tồn kho</label>
+                                    <input type="number" class="form-control" asp-for="Quantity" readonly>
+                                    <small class="text-muted">Số lượng được cập nhật thông qua nhập/xuất kho</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="AvailableQuantity" class="form-label">Số lượng có thể bán</label>
+                                    <input type="number" class="form-control" asp-for="AvailableQuantity">
+                                    <span asp-validation-for="AvailableQuantity" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label">Mô tả sản phẩm</label>
+                                <textarea class="form-control" asp-for="Description" rows="5"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Hình ảnh sản phẩm</label>
+                                <div class="product-image-preview mb-2">
+                                    <img id="imagePreview" src="@Model.Images" class="img-fluid rounded" alt="@Model.Name">
+                                </div>
+                                <input type="file" class="form-control" id="imageUpload" name="file" accept="image/*">
+                                <input type="hidden" asp-for="Images" />
+                                <small class="text-muted">Để trống nếu không muốn thay đổi hình ảnh</small>
+                            </div>
+
+                            <div class="mb-3 mt-4">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-save"></i> Lưu thay đổi
+                                </button>
+                                <button type="button" id="cancelEdit" class="btn btn-outline-secondary w-100 mt-2">
+                                    <i class="fas fa-times"></i> Hủy chỉnh sửa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- History Section (always visible) -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">Lịch sử nhập kho</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Ngày nhập</th>
+                                        <th>Số lượng</th>
+                                        <th>Giá nhập</th>
+                                        <th>Nhà cung cấp</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @* @if (Model.StockHistories != null && Model.StockHistories.Any())
+                                    {
+                                        @foreach (var item in Model.StockHistories)
+                                        {
+                                            <tr>
+                                                <td>@item.Date.ToString("dd/MM/yyyy")</td>
+                                                <td>@item.Quantity</td>
+                                                <td>@item.Price.ToString("N0") VND</td>
+                                                <td>@item.SupplierName</td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="4" class="text-center">Chưa có lịch sử nhập kho</td>
+                                        </tr>
+                                    } *@
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">Lịch sử bán hàng</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Ngày bán</th>
+                                        <th>Số lượng</th>
+                                        <th>Giá bán</th>
+                                        <th>Đơn hàng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @*  @if (Model.SalesHistories != null && Model.SalesHistories.Any())
+                                    {
+                                        @foreach (var item in Model.SalesHistories)
+                                        {
+                                            <tr>
+                                                <td>@item.Date.ToString("dd/MM/yyyy")</td>
+                                                <td>@item.Quantity</td>
+                                                <td>@item.Price.ToString("N0") VND</td>
+                                                <td><a href="#" class="text-primary">@item.OrderId</a></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="4" class="text-center">Chưa có lịch sử bán hàng</td>
+                                        </tr>
+                                    } *@
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteProductModalLabel">Xác nhận xóa sản phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa sản phẩm <strong>@Model.Name</strong>?</p>
+                <p class="text-danger">Hành động này không thể hoàn tác.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form asp-action="Delete" asp-controller="Product" asp-route-id="@Model.ProductId" method="get">
+                    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageUpload = document.getElementById('imageUpload');
+            const imagePreview = document.getElementById('imagePreview');
+
+            imageUpload.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                    }
+
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

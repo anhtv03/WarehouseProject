@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WarehouseProject.Models.DTOs {
+namespace WarehouseFrontEnd.Models.DTOs {
     public class ProductDTO {
         [Required(ErrorMessage = "Product name is required.")]
         [MaxLength(100, ErrorMessage = "Name cannot exceed 100 characters.")]

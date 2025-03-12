@@ -123,7 +123,7 @@ namespace WarehouseProject.Services.ServicesImp {
 
                 httpContext.Session.SetString("User", JsonSerializer.Serialize(sessionUser));
 
-                return (true, "Login successful");
+                return (true, JsonSerializer.Serialize(sessionUser));
             } catch (Exception ex) {
                 throw new Exception(ex.Message);
             }
