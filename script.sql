@@ -57,6 +57,7 @@ CREATE TABLE [dbo].[Products](
     [AvailableQuantity] [int] NULL DEFAULT ((0)),
     [Price] [decimal](10, 2) NOT NULL,
     [CostPrice] [decimal](10, 2) NOT NULL,
+	[IsActive] BIT DEFAULT 1 NULL,
     [CategoryID] [int] NULL,
 	[SupplierID] [int] NULL,
     [CreatedAt] [datetime] NOT NULL DEFAULT (GETDATE()),
@@ -82,6 +83,7 @@ CREATE TABLE [dbo].[Order](
 	[SupplierID] [int] NULL,
 	[OrderDate] [datetime] NOT NULL DEFAULT (GETDATE()),
 	[Note] [nvarchar] (500) NULL,
+	[OrderType] VARCHAR(10) NOT NULL,
     [CreatedAt] [datetime] NOT NULL DEFAULT (GETDATE()),
     [UpdatedAt] [datetime] NULL,
 )

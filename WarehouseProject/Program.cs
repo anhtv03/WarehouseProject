@@ -1,13 +1,13 @@
 ﻿using CloudinaryDotNet;
 using Microsoft.EntityFrameworkCore;
-using WarehouseProject.Models;
 using WarehouseProject.Services;
 using WarehouseProject.Services.ServicesImp;
 using WarehouseProject.Util;
-using WarehouseProject.Controllers;
 using WarehouseProject.Models.Entity;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.OpenApi.Any;
 
 namespace WarehouseProject {
     public class Program {
@@ -37,10 +37,12 @@ namespace WarehouseProject {
 
             // Register service
             builder.Services.AddScoped<ICategoryService, CategoryService>();
-            builder.Services.AddScoped<ISupplierService, SupplierService>();
-            builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<ISupplierService, SupplierService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             // Register JsonIgnore
             builder.Services.AddControllers()
@@ -53,10 +55,10 @@ namespace WarehouseProject {
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options => {
-                //options.MapType<Enum>(() => new OpenApiSchema {
-                //    Type = "string",
-                //    Enum = Enum.GetNames(typeof(Enum)).Select(name => new OpenApiString(name)).ToList()
-                //});
+                options.MapType<OrderTypeEnum>(() => new OpenApiSchema {
+                    Type = "string",
+                    Enum = Enum.GetNames(typeof(OrderTypeEnum)).Select(name => new OpenApiString(name)).Cast<IOpenApiAny>().ToList()
+                });
             });
 
             var app = builder.Build();

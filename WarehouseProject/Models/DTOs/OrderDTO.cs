@@ -3,7 +3,6 @@ using WarehouseProject.Util;
 
 namespace WarehouseProject.Models.DTOs {
     public class OrderDTO {
-        [Required(ErrorMessage = "Order status is required.")]
         [StringLength(50, ErrorMessage = "Status cannot exceed 50 characters.")]
         public string Status { get; set; } = null!;
 
@@ -18,7 +17,9 @@ namespace WarehouseProject.Models.DTOs {
 
         [StringLength(500, ErrorMessage = "Note cannot exceed 500 characters.")]
         public string? Note { get; set; }
-        public OrderTypeEnum? OrderType { get; set; }
+
+        [EnumDataType(typeof(OrderTypeEnum), ErrorMessage = "Order type must be either 'Inbound' or 'Outbound'.")]
+        public string? OrderType { get; set; }
 
     }
 }

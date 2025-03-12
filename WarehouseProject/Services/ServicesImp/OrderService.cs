@@ -25,13 +25,13 @@ namespace WarehouseProject.Services.ServicesImp {
                 }
 
                 var order = new Order {
-                    Status = entity.Status,
+                    Status = "pending",
                     UserId = entity.UserId,
                     CustomerId = entity.CustomerId,
                     SupplierId = entity.SupplierId,
                     OrderDate = DateTime.Now,
                     Note = entity.Note,
-                    OrderType = entity.OrderType.ToString(),
+                    OrderType = entity.OrderType,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = null
                 };
@@ -69,7 +69,7 @@ namespace WarehouseProject.Services.ServicesImp {
                     query = query.Where(p => p.Status.Contains(search));
                 }
 
-                query = query.Where(p => p.OrderType.Equals(role)).OrderByDescending(p => p.CreatedAt);
+                query = query.Where(p => p.OrderType.Equals(role.ToString())).OrderByDescending(p => p.CreatedAt);
 
                 return query.Include(x => x.User)
                             .Include(x => x.Customer)

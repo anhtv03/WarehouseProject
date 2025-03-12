@@ -27,6 +27,7 @@ namespace WarehouseProject.Util {
                 User user = new User {
                     Username = "admin",
                     Password = BCrypt.Net.BCrypt.HashPassword("admin"),
+                    FullName = "Admin",
                     Role = 1
                 };
                 _context.Users.Add(user);
