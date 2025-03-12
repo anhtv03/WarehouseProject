@@ -35,7 +35,7 @@
                         <span class="input-group-text bg-white border-end-0">
                             <i class="fas fa-search text-muted"></i>
                         </span>
-                        <input type="text" id="searchText" name="query" value="@ViewBag.SearchValue" class="form-control border-start-0" placeholder="Tìm kiếm theo mã đơn hàng, trạng thái, ..." onchange="getSearch()">
+                        <input type="text" id="searchText" value="@ViewBag.SearchValue" class="form-control border-start-0" placeholder="Tìm kiếm theo mã đơn hàng, ..." onchange="getSearch()">
                     </div>
                 </div>
                 <div class="col-md-6"></div>
@@ -63,14 +63,14 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <a asp-action="Details" asp-controller="Inbound" asp-route-id="@item.OrderId" class="text-primary">
-                                            IG@(item.OrderId + 5000)
+                                            @(item.Code)
                                         </a>
                                     </div>
                                 </td>
                                 <td>@item.CreatedAt.ToString("dd/MM/yyyy")</td>
                                 @if (item.OrderType == "Inbound") {
                                     <td>Đơn  Nhập</td>
-                                } else if (item.OrderType = "Outbound") {
+                                } else if (item.OrderType == "Outbound") {
                                     <td>Đơn Xuất</td>
                                 }
                                 @if (item.Status == "pending") {
@@ -79,8 +79,8 @@
                                     <td class="text-success">Đã xử lý</td>
                                 }
                                 <td>@(item.Supplier?.Name ?? "Chưa có nhà cung cấp")</td>
-                                <td></td>
-                                <td></td>
+                                <td>@(item.ProductCount)</td>
+                                <td>@item.TotalCost</td>
                             </tr>
                         }
                     </tbody>
@@ -104,7 +104,7 @@
         function getSearch(){
             const search = document.getElementById('searchText');
             const searchValue = search.value.trim();
-            window.location.href = `${productIndexUrl}?query=${encodeURIComponent(searchValue)}`;
+            window.location.href = `${productIndexUrl}?search=${encodeURIComponent(searchValue)}`;
         }
     </script>
 }

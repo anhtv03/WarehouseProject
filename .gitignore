@@ -1,11 +1,12 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
+# Bỏ qua thư mục obj và bin ở mọi cấp
+*/obj/
+*/bin/
 
-/.vs/WarehouseProject/CopilotIndices/17.12.68.61481/CodeChunks.db
-*.db-shm
-*.db-wal
-/.vs/WarehouseProject/CopilotIndices/17.12.68.61481/SemanticSymbols.db
-/.vs/WarehouseProject/CopilotIndices/17.12.68.61481/SemanticSymbols.db-shm
-/.vs/WarehouseProject/CopilotIndices/17.12.68.61481/SemanticSymbols.db-wal
-*.vsidx
+# Bỏ qua file tạm của Visual Studio
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+# Bỏ qua thư mục build
+build/

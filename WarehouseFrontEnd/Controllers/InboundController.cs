@@ -27,8 +27,27 @@ namespace WarehouseFrontEnd.Controllers {
             } else {
                 list = await LoadDataAsync<Order>($"{urlOrder}/Inbound");
             }
+            var orderDetails = await LoadDataAsync<OrderDetail>($"{urlOD}");
 
-            ViewBag.Inbound = list;
+            ViewBag.Inbound = list
+                .Select(i => new {
+                    i.OrderId,
+                    i.CreatedAt,
+                    i.OrderType,
+                    i.Status,
+                    i.Supplier,
+                    i.Customer,
+                    i.User,
+                    ProductCount = orderDetails
+                                        .Where(od => od.OrderId == i.OrderId)
+                                        .Select(od => od.ProductId)
+                                        .Distinct()
+                                        .Count(),
+                    TotalCost = orderDetails
+                                        .Where(od => od.OrderId == i.OrderId)
+                                        .Sum(od => od.TotalPrice)
+                }).ToList();
+
             ViewBag.SearchValue = search ?? "";
             return View();
         }
@@ -100,6 +119,20 @@ namespace WarehouseFrontEnd.Controllers {
             return dataList;
         }
 
+        //private string getSearch(string? search) {
+        //    if (search == null) {
+        //        return "";
+        //    }
+        //    var firstChar = search.Substring(0, 2);
+        //    var lastChar = search.Substring(2);
+
+        //    if (firstChar != "IG") {
+        //        return "WTEIYADABFI";
+        //    }
+
+        //    var value = int.Parse(lastChar);
+        //    return value.ToString();
+        //}
 
     }
 }
