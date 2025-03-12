@@ -1,4 +1,4 @@
-﻿--create database WarehouseDB
+--create database WarehouseDB
 USE [WarehouseDB]
 GO
 
