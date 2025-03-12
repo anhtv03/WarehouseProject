@@ -62,12 +62,22 @@
                                 <td></td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <a asp-action="Details" asp-controller="Inbound" asp-route-id="@item.OrderId" class="text-primary">@(item.OrderId)</a>
+                                        <a asp-action="Details" asp-controller="Inbound" asp-route-id="@item.OrderId" class="text-primary">
+                                            IG@(item.OrderId + 5000)
+                                        </a>
                                     </div>
                                 </td>
                                 <td>@item.CreatedAt.ToString("dd/MM/yyyy")</td>
-                                <td>@item.OrderType</td>
-                                <td></td>
+                                @if (item.OrderType == "Inbound") {
+                                    <td>Đơn  Nhập</td>
+                                } else if (item.OrderType = "Outbound") {
+                                    <td>Đơn Xuất</td>
+                                }
+                                @if (item.Status == "pending") {
+                                    <td class="text-warning">Đang chờ xử lý</td>
+                                } else {
+                                    <td class="text-success">Đã xử lý</td>
+                                }
                                 <td>@(item.Supplier?.Name ?? "Chưa có nhà cung cấp")</td>
                                 <td></td>
                                 <td></td>

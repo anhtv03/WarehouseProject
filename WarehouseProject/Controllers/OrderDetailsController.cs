@@ -17,6 +17,18 @@ namespace WarehouseProject.Controllers {
             var list = _service.GetAll();
             return Ok(list);
         }
+        
+        [HttpGet("Order/{id}")]
+        public ActionResult GetByOrderId([FromRoute] int id) {
+            var list = _service.GetByOrderId(id);
+            return Ok(list);
+        }
+        
+        [HttpGet("Product/{id}")]
+        public ActionResult GetByProductId([FromRoute] int id) {
+            var list = _service.GetByProductId(id);
+            return Ok(list);
+        }
 
         [HttpGet("{id}")]
         public ActionResult GetDetails([FromRoute] int id) {

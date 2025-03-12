@@ -249,6 +249,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "WarehouseProject.Controllers.OrderDetailsController",
+    "Method": "GetByOrderId",
+    "RelativePath": "api/OrderDetails/Order/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseProject.Controllers.OrderDetailsController",
+    "Method": "GetByProductId",
+    "RelativePath": "api/OrderDetails/Product/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "WarehouseProject.Controllers.OrdersController",
     "Method": "Create",
     "RelativePath": "api/Orders",

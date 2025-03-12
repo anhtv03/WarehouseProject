@@ -79,6 +79,34 @@ namespace WarehouseProject.Services.ServicesImp {
             }
         }
 
+        public List<OrderDetail> GetByOrderId(int id) {
+            try {
+                var list = _context.OrderDetails
+                                   .OrderByDescending(p => p.CreatedAt)
+                                   .Where(p => p.OrderId == id)
+                                   .Include(x => x.Order)
+                                   .Include(x => x.Product)
+                                   .ToList();
+                return list;
+            } catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public List<OrderDetail> GetByProductId(int id) {
+            try {
+                var list = _context.OrderDetails
+                                   .OrderByDescending(p => p.CreatedAt)
+                                   .Where(p => p.ProductId == id)
+                                   .Include(x => x.Order)
+                                   .Include(x => x.Product)
+                                   .ToList();
+                return list;
+            } catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public (bool isSuccess, string message) Update(int id, OrderDetailDTO entity) {
             try {
                 var order = _context.OrderDetails.FirstOrDefault(p => p.OrderDetailId == id);
@@ -92,7 +120,7 @@ namespace WarehouseProject.Services.ServicesImp {
                 if (entity.ProductId.HasValue && !_context.Products.Any(s => s.ProductId == entity.ProductId)) {
                     return (false, "Product does not exist.");
                 }
-                
+
                 var price = _context.Products.FirstOrDefault(p => p.ProductId == entity.ProductId).Price;
                 order.ProductId = entity.ProductId;
                 order.OrderId = entity.OrderId;

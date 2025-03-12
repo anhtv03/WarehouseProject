@@ -7,9 +7,11 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WarehouseFrontEnd.Controllers {
     public class InboundController : Controller {
-        private readonly string urlInbound = "https://localhost:5100/api/Orders/Inbound";
-        private readonly string urlCategory = "https://localhost:5100/api/Categories";
+        private readonly string urlOrder = "https://localhost:5100/api/Orders";
+        private readonly string urlCustomer = "https://localhost:5100/api/Customers";
         private readonly string urlSupplier = "https://localhost:5100/api/Suppliers";
+        private readonly string urlUser = "https://localhost:5100/api/Users";
+        private readonly string urlOD = "https://localhost:5100/api/OrderDetails";
 
         public async Task<IActionResult> Index(string? search) {
             UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
@@ -21,9 +23,9 @@ namespace WarehouseFrontEnd.Controllers {
 
             List<Order> list = new List<Order>();
             if (search != null) {
-                list = await LoadDataAsync<Order>($"{urlInbound}?search={search}");
+                list = await LoadDataAsync<Order>($"{urlOrder}/Inbound?search={search}");
             } else {
-                list = await LoadDataAsync<Order>(urlInbound);
+                list = await LoadDataAsync<Order>($"{urlOrder}/Inbound");
             }
 
             ViewBag.Inbound = list;

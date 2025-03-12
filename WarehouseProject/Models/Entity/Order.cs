@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace WarehouseProject.Models.Entity
-{
-    public partial class Order
-    {
-        public Order()
-        {
+namespace WarehouseProject.Models.Entity {
+    public partial class Order {
+        public Order() {
             OrderDetails = new HashSet<OrderDetail>();
         }
 
@@ -22,12 +19,12 @@ namespace WarehouseProject.Models.Entity
         public DateTime? UpdatedAt { get; set; }
         public string? OrderType { get; set; }
 
-        [JsonIgnore]
+
         public virtual Customer? Customer { get; set; }
-        [JsonIgnore]
+
         public virtual Supplier? Supplier { get; set; }
 
-        [JsonIgnore]
+
         public virtual User? User { get; set; }
         [JsonIgnore]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
