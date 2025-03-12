@@ -1,0 +1,90 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Chi tiết nhà cung cấp";
+}
+@model Supplier
+
+<div class="main-content">
+    <div class="page-title">
+        <h2>Chi tiết nhà cung cấp</h2>
+        <div>
+            <a asp-action="Index" asp-controller="Supplier" class="btn btn-outline-secondary me-2">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSupplierModal">
+                <i class="fas fa-trash"></i> Xóa
+            </button>
+        </div>
+    </div>
+
+    <div class="product-detail">
+        <!-- Edit Mode -->
+        <div id="editMode" class="card">
+            <div class="card-body">
+                <form id="editSupplierForm" asp-action="Edit" asp-controller="Supplier" asp-route-id="@Model.SupplierId" method="post">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="Name" class="form-label">Tên nhà cung cấp</label>
+                                    <input type="text" class="form-control" asp-for="Name" required>
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="Phone" class="form-label">Số điện thoại</label>
+                                    <input class="form-control" asp-for="Phone">
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="Email" class="form-label">Email</label>
+                                    <input class="form-control" asp-for="Email">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="Address" class="form-label">Địa chỉ</label>
+                                    <input class="form-control" asp-for="Address">
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3 mt-4">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-save"></i> Lưu thay đổi
+                                </button>
+                                <button type="button" id="cancelCreate" class="btn btn-outline-secondary w-100 mt-2">
+                                    <i class="fas fa-times"></i> Hủy chỉnh sửa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteSupplierModal" tabindex="-1" aria-labelledby="deleteSupplierModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteSupplierModalLabel">Xác nhận xóa nhà cung cấp</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa nhà cung cấp <strong>@Model.Name</strong>?</p>
+                <p class="text-danger">Hành động này không thể hoàn tác.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form asp-action="Delete" asp-controller="Supplier" asp-route-id="@Model.SupplierId" method="get">
+                    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
