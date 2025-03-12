@@ -86,6 +86,10 @@ namespace WarehouseProject.Models.Entity
                 entity.Property(e => e.OrderType)
                     .HasMaxLength(10)
                     .IsUnicode(false);
+                
+                entity.Property(e => e.Code)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Status).HasMaxLength(100);
 

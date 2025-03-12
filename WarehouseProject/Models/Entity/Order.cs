@@ -19,7 +19,7 @@ namespace WarehouseProject.Models.Entity {
         public DateTime? UpdatedAt { get; set; }
         public string? OrderType { get; set; }
 
-
+        public string? Code { get; set; }
         public virtual Customer? Customer { get; set; }
 
         public virtual Supplier? Supplier { get; set; }

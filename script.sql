@@ -84,6 +84,7 @@ CREATE TABLE [dbo].[Order](
 	[OrderDate] [datetime] NOT NULL DEFAULT (GETDATE()),
 	[Note] [nvarchar] (500) NULL,
 	[OrderType] VARCHAR(10) NOT NULL,
+	[Code] VARCHAR(10) NOT NULL,
     [CreatedAt] [datetime] NOT NULL DEFAULT (GETDATE()),
     [UpdatedAt] [datetime] NULL,
 )

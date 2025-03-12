@@ -32,11 +32,15 @@ namespace WarehouseProject.Services.ServicesImp {
                     OrderDate = DateTime.Now,
                     Note = entity.Note,
                     OrderType = entity.OrderType,
+                    Code = "IG" + 5000,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = null
                 };
 
                 _context.Orders.Add(order);
+                _context.SaveChanges();
+
+                order.Code = "IG" + (5000 + order.OrderId);
                 _context.SaveChanges();
                 return (true, "Created Successful");
             } catch (Exception ex) {
@@ -66,15 +70,17 @@ namespace WarehouseProject.Services.ServicesImp {
                 var query = _context.Orders.AsQueryable();
 
                 if (!string.IsNullOrEmpty(search)) {
-                    query = query.Where(p => p.Status.Contains(search));
+                    query = query.Where(p => p.Code.ToString().Contains(search) ||
+                                             p.Status.Contains(search));
                 }
 
                 query = query.Where(p => p.OrderType.Equals(role.ToString())).OrderByDescending(p => p.CreatedAt);
 
-                return query.Include(x => x.User)
-                            .Include(x => x.Customer)
-                            .Include(x => x.Supplier)
-                            .ToList();
+                var list = query.Include(x => x.User)
+                                .Include(x => x.Customer)
+                                .Include(x => x.Supplier)
+                                .ToList();
+                return list;
             } catch (Exception ex) {
                 throw new Exception(ex.Message);
             }

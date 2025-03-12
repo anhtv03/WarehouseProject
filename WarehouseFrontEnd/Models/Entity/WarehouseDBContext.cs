@@ -87,6 +87,10 @@ namespace WarehouseFrontEnd.Models.Entity
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Code)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Status).HasMaxLength(100);
 
                 entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
