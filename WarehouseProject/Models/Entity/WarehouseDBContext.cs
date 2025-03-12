@@ -27,7 +27,6 @@ namespace WarehouseProject.Models.Entity
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -83,6 +82,10 @@ namespace WarehouseProject.Models.Entity
                 entity.Property(e => e.OrderDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.OrderType)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Status).HasMaxLength(100);
 
@@ -154,6 +157,8 @@ namespace WarehouseProject.Models.Entity
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Images).HasMaxLength(255);
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Name).HasMaxLength(100);
 

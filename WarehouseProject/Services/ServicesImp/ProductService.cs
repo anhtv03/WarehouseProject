@@ -45,6 +45,7 @@ namespace WarehouseProject.Services.ServicesImp {
                     AvailableQuantity = entity.AvailableQuantity ?? 0,
                     Price = entity.Price,
                     CostPrice = entity.CostPrice,
+                    IsActive = true,
                     CategoryId = entity.CategoryId,
                     SupplierId = entity.SupplierId,
                     CreatedAt = DateTime.Now,
@@ -67,7 +68,9 @@ namespace WarehouseProject.Services.ServicesImp {
                     return (false, "No found to delete.");
                 }
 
-                _context.OrderDetails.Where(x => x.ProductId == id).ToList().ForEach(x => x.ProductId = null);
+                //product.IsActive = false;
+
+                _context.OrderDetails.RemoveRange(_context.OrderDetails.Where(p => p.ProductId == id));
                 _context.Products.Remove(product);
                 _context.SaveChanges();
                 return (true, "Delete successful");

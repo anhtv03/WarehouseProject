@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WarehouseProject.Models.DTOs;
 using WarehouseProject.Services;
+using WarehouseProject.Util;
 
 namespace WarehouseProject.Controllers {
     [Route("api/[controller]")]
@@ -11,9 +12,9 @@ namespace WarehouseProject.Controllers {
             _service = service;
         }
 
-        [HttpGet]
-        public ActionResult GetAll([FromQuery] string? search) {
-            var list = _service.GetAll(search);
+        [HttpGet("{role}")]
+        public ActionResult GetAll([FromRoute] OrderTypeEnum role, [FromQuery] string? search) {
+            var list = _service.GetAll(role, search);
             return Ok(list);
         }
 

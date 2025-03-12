@@ -1,9 +1,10 @@
 ﻿using WarehouseProject.Models.DTOs;
 using WarehouseProject.Models.Entity;
+using WarehouseProject.Util;
 
 namespace WarehouseProject.Services {
     public interface IOrderService {
-        List<Order> GetAll(string? search);
+        List<Order> GetAll(OrderTypeEnum role, string? search);
         Order GetDetail(int id);
         (bool isSuccess, string message) Create(OrderDTO entity);
         (bool isSuccess, string message) Update(int id, OrderDTO entity);

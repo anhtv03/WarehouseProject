@@ -1,0 +1,104 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Danh sách đơn nhập hàng";
+}
+
+<div class="main-content">
+    <div class="page-title">
+        <h2>Danh sách đơn nhập hàng</h2>
+        <div>
+            <button class="btn btn-outline-secondary me-2">
+                <i class="fas fa-file-export"></i> Xuất file
+            </button>
+            <button class="btn btn-outline-secondary me-3">
+                <i class="fas fa-file-import"></i> Nhập file
+            </button>
+            <button id="addProduct" class="btn btn-primary" onclick="CreateProduct()">
+                <i class="fas fa-plus-circle"></i> Tạo đơn nhập hàng
+            </button>
+        </div>
+    </div>
+
+
+    <div class="product-table">
+        <ul class="nav nav-tabs tab-menu">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Tất cả</a>
+            </li>
+        </ul>
+
+        <div class="p-3">
+            @* ----------------search-------------------- *@
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" id="searchText" name="query" value="@ViewBag.SearchValue" class="form-control border-start-0" placeholder="Tìm kiếm theo mã đơn hàng, trạng thái, ..." onchange="getSearch()">
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
+            </div>
+
+            @* -------------------table--------------------- *@
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px"><i class="fas fa-cog"></i></th>
+                            <th>Mã Đơn</th>
+                            <th>Ngày Khởi Tạo</th>
+                            <th>Loại Đơn</th>
+                            <th>Trạng Thái</th>
+                            <th>Nhà Cung Cấp</th>
+                            <th>Số Lượng Đặt</th>
+                            <th>Giá Trị Đơn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.Inbound == null) {
+                            <tr>Cửa hàng của bạn chưa có đơn nào</tr>
+                        } else {
+                            @foreach (var item in ViewBag.Inbound) {
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a asp-action="Details" asp-controller="Inbound" asp-route-id="@item.OrderId" class="text-primary">@(item.OrderId)</a>
+                                        </div>
+                                    </td>
+                                    <td>@item.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.OrderType</td>
+                                    <td></td>
+                                    <td>@(item.Supplier?.Name ?? "Chưa có nhà cung cấp")</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        function CreateProduct(){
+            const productIndexUrl = '@Url.Action("Create", "Inbound")';
+            console.log(productIndexUrl);
+            window.location.href = `${productIndexUrl}`;
+        }
+
+        const productIndexUrl = '@Url.Action("Index", "Inbound")';
+        function getSearch(){
+            const search = document.getElementById('searchText');
+            const searchValue = search.value.trim();
+            window.location.href = `${productIndexUrl}?query=${encodeURIComponent(searchValue)}`;
+        }
+    </script>
+}

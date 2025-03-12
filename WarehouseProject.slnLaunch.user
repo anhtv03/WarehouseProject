@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "WarehouseProject\\WarehouseProject.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "WarehouseFrontEnd\\WarehouseFrontEnd.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

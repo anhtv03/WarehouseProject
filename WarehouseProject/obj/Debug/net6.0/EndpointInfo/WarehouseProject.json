@@ -398,12 +398,20 @@
         }
       }
     },
-    "/api/Orders": {
+    "/api/Orders/{role}": {
       "get": {
         "tags": [
           "Orders"
         ],
         "parameters": [
+          {
+            "name": "role",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/OrderTypeEnum"
+            }
+          },
           {
             "name": "search",
             "in": "query",
@@ -412,35 +420,6 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Orders"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderDTO"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -532,6 +511,37 @@
         }
       }
     },
+    "/api/Orders": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Products": {
       "get": {
         "tags": [
@@ -558,19 +568,109 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/ProductDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductDTO"
+                "required": [
+                  "CategoryId",
+                  "CostPrice",
+                  "Name",
+                  "Price",
+                  "SupplierId"
+                ],
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "Description": {
+                    "maxLength": 1500,
+                    "type": "string"
+                  },
+                  "Images": {
+                    "maxLength": 255,
+                    "type": "string"
+                  },
+                  "Unit": {
+                    "maxLength": 20,
+                    "type": "string"
+                  },
+                  "Quantity": {
+                    "maximum": 2147483647,
+                    "minimum": 0,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "AvailableQuantity": {
+                    "maximum": 2147483647,
+                    "minimum": 0,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Price": {
+                    "maximum": 99999999.99,
+                    "minimum": 0.01,
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "CostPrice": {
+                    "maximum": 99999999.99,
+                    "minimum": 0.01,
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "CategoryId": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "SupplierId": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "Images": {
+                  "style": "form"
+                },
+                "Unit": {
+                  "style": "form"
+                },
+                "Quantity": {
+                  "style": "form"
+                },
+                "AvailableQuantity": {
+                  "style": "form"
+                },
+                "Price": {
+                  "style": "form"
+                },
+                "CostPrice": {
+                  "style": "form"
+                },
+                "CategoryId": {
+                  "style": "form"
+                },
+                "SupplierId": {
+                  "style": "form"
+                },
+                "file": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -644,19 +744,109 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/ProductDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductDTO"
+                "required": [
+                  "CategoryId",
+                  "CostPrice",
+                  "Name",
+                  "Price",
+                  "SupplierId"
+                ],
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "Description": {
+                    "maxLength": 1500,
+                    "type": "string"
+                  },
+                  "Images": {
+                    "maxLength": 255,
+                    "type": "string"
+                  },
+                  "Unit": {
+                    "maxLength": 20,
+                    "type": "string"
+                  },
+                  "Quantity": {
+                    "maximum": 2147483647,
+                    "minimum": 0,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "AvailableQuantity": {
+                    "maximum": 2147483647,
+                    "minimum": 0,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Price": {
+                    "maximum": 99999999.99,
+                    "minimum": 0.01,
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "CostPrice": {
+                    "maximum": 99999999.99,
+                    "minimum": 0.01,
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "CategoryId": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "SupplierId": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "Images": {
+                  "style": "form"
+                },
+                "Unit": {
+                  "style": "form"
+                },
+                "Quantity": {
+                  "style": "form"
+                },
+                "AvailableQuantity": {
+                  "style": "form"
+                },
+                "Price": {
+                  "style": "form"
+                },
+                "CostPrice": {
+                  "style": "form"
+                },
+                "CategoryId": {
+                  "style": "form"
+                },
+                "SupplierId": {
+                  "style": "form"
+                },
+                "file": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -1119,6 +1309,9 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          },
+          "orderType": {
+            "$ref": "#/components/schemas/OrderTypeEnum"
           }
         },
         "additionalProperties": false
@@ -1152,76 +1345,13 @@
         },
         "additionalProperties": false
       },
-      "ProductDTO": {
-        "required": [
-          "costPrice",
-          "name",
-          "price"
+      "OrderTypeEnum": {
+        "enum": [
+          0,
+          1
         ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 100,
-            "minLength": 1,
-            "type": "string"
-          },
-          "description": {
-            "maxLength": 1500,
-            "type": "string",
-            "nullable": true
-          },
-          "images": {
-            "maxLength": 255,
-            "type": "string",
-            "nullable": true
-          },
-          "unit": {
-            "maxLength": 20,
-            "type": "string",
-            "nullable": true
-          },
-          "quantity": {
-            "maximum": 2147483647,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "availableQuantity": {
-            "maximum": 2147483647,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "price": {
-            "maximum": 99999999.99,
-            "minimum": 0.01,
-            "type": "number",
-            "format": "double"
-          },
-          "costPrice": {
-            "maximum": 99999999.99,
-            "minimum": 0.01,
-            "type": "number",
-            "format": "double"
-          },
-          "categoryId": {
-            "maximum": 2147483647,
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "supplierId": {
-            "maximum": 2147483647,
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
+        "type": "integer",
+        "format": "int32"
       },
       "RegisterDTO": {
         "required": [

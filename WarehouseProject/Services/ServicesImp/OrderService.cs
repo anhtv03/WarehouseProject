@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WarehouseProject.Models.DTOs;
 using WarehouseProject.Models.Entity;
+using WarehouseProject.Util;
 
 namespace WarehouseProject.Services.ServicesImp {
     public class OrderService : IOrderService {
@@ -30,6 +31,7 @@ namespace WarehouseProject.Services.ServicesImp {
                     SupplierId = entity.SupplierId,
                     OrderDate = DateTime.Now,
                     Note = entity.Note,
+                    OrderType = entity.OrderType.ToString(),
                     CreatedAt = DateTime.Now,
                     UpdatedAt = null
                 };
@@ -59,7 +61,7 @@ namespace WarehouseProject.Services.ServicesImp {
             }
         }
 
-        public List<Order> GetAll(string? search) {
+        public List<Order> GetAll(OrderTypeEnum role, string? search) {
             try {
                 var query = _context.Orders.AsQueryable();
 
@@ -67,7 +69,7 @@ namespace WarehouseProject.Services.ServicesImp {
                     query = query.Where(p => p.Status.Contains(search));
                 }
 
-                query = query.OrderByDescending(p => p.CreatedAt);
+                query = query.Where(p => p.OrderType.Equals(role)).OrderByDescending(p => p.CreatedAt);
 
                 return query.Include(x => x.User)
                             .Include(x => x.Customer)

@@ -66,7 +66,7 @@ namespace WarehouseFrontEnd.Controllers {
 
             var categories = await LoadDataAsync<Category>(urlCategory);
             var suppliers = await LoadDataAsync<Supplier>(urlSupplier);
-            
+
             ViewBag.Categories = categories;
             ViewBag.Suppliers = suppliers;
             return View();
@@ -75,30 +75,9 @@ namespace WarehouseFrontEnd.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductDTO product, IFormFile? file) {
-            UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
-            if (current_user == null) {
-                return RedirectToAction("Index", "Auth");
-            } else {
-                ViewBag.CurrentUser = current_user;
-            }
-
             using (HttpClient client = new HttpClient()) {
                 using (var content = new MultipartFormDataContent()) {
-                    content.Add(new StringContent(product.Name), "Name");
-                    content.Add(new StringContent(product.Description == null ? "" : product.Description), "Description");
-                    content.Add(new StringContent(product.Price.ToString()), "Price");
-                    content.Add(new StringContent(product.CostPrice.ToString()), "CostPrice");
-                    content.Add(new StringContent(product.Images ?? ""), "Images");
-
-                    if (product.Quantity.HasValue) content.Add(new StringContent(product.Quantity.Value.ToString()), "Quantity");
-                    if (product.AvailableQuantity.HasValue) content.Add(new StringContent(product.AvailableQuantity.Value.ToString()), "AvailableQuantity");
-                    if (product.CategoryId.HasValue) content.Add(new StringContent(product.CategoryId.Value.ToString()), "CategoryId");
-                    if (product.SupplierId.HasValue) content.Add(new StringContent(product.SupplierId.Value.ToString()), "SupplierId");
-
-                    if (file != null && file.Length > 0) {
-                        var stream = file.OpenReadStream();
-                        content.Add(new StreamContent(stream), "file", file.FileName);
-                    }
+                    CreateContentProduct(product, file, content);
 
                     HttpResponseMessage response = await client.PostAsync($"{urlProduct}", content);
                     if (!response.IsSuccessStatusCode) {
@@ -108,46 +87,15 @@ namespace WarehouseFrontEnd.Controllers {
                     }
                 }
             }
-
-
-            //ViewBag.Categories = await LoadDataAsync<Category>(urlCategory);
-            //ViewBag.Suppliers = await LoadDataAsync<Supplier>(urlSupplier);
             return RedirectToAction("Index", "Product");
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ProductDTO product, IFormFile? file) {
-            UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
-            if (current_user == null) {
-                return RedirectToAction("Index", "Auth");
-            } else {
-                ViewBag.CurrentUser = current_user;
-            }
-
-            var categories = await LoadDataAsync<Category>(urlCategory);
-            var suppliers = await LoadDataAsync<Supplier>(urlSupplier);
-            ViewBag.Categories = categories;
-            ViewBag.Suppliers = suppliers;
-
             using (HttpClient client = new HttpClient()) {
                 using (var content = new MultipartFormDataContent()) {
-                    content.Add(new StringContent(product.Name), "Name");
-                    content.Add(new StringContent(product.Description == null ? "" : product.Description), "Description");
-                    content.Add(new StringContent(product.Price.ToString()), "Price");
-                    content.Add(new StringContent(product.CostPrice.ToString()), "CostPrice");
-                    content.Add(new StringContent(product.Images ?? ""), "Images");
-
-                    if (product.Quantity.HasValue) content.Add(new StringContent(product.Quantity.Value.ToString()), "Quantity");
-                    if (product.AvailableQuantity.HasValue) content.Add(new StringContent(product.AvailableQuantity.Value.ToString()), "AvailableQuantity");
-                    if (product.CategoryId.HasValue) content.Add(new StringContent(product.CategoryId.Value.ToString()), "CategoryId");
-                    if (product.SupplierId.HasValue) content.Add(new StringContent(product.SupplierId.Value.ToString()), "SupplierId");
-
-                    if (file != null && file.Length > 0) {
-                        var stream = file.OpenReadStream();
-                        content.Add(new StreamContent(stream), "file", file.FileName);
-                    }
+                    CreateContentProduct(product, file, content);
 
                     HttpResponseMessage response = await client.PutAsync($"{urlProduct}/{id}", content);
                     if (!response.IsSuccessStatusCode) {
@@ -168,7 +116,6 @@ namespace WarehouseFrontEnd.Controllers {
             return View("Details", ConvertToProduct(id, product));
         }
 
-        // GET: ProductController/Delete/5
         public async Task<IActionResult> Delete(int id) {
             using (HttpClient client = new HttpClient()) {
                 HttpResponseMessage res = await client.DeleteAsync($"{urlProduct}/{id}");
@@ -215,6 +162,23 @@ namespace WarehouseFrontEnd.Controllers {
                 CategoryId = dto.CategoryId ?? 0,
                 SupplierId = dto.SupplierId ?? 0
             };
+        }
+        private void CreateContentProduct(ProductDTO product, IFormFile? file, MultipartFormDataContent content) {
+            content.Add(new StringContent(product.Name), "Name");
+            content.Add(new StringContent(product.Description == null ? "" : product.Description), "Description");
+            content.Add(new StringContent(product.Price.ToString()), "Price");
+            content.Add(new StringContent(product.CostPrice.ToString()), "CostPrice");
+            content.Add(new StringContent(product.Images ?? ""), "Images");
+
+            if (product.Quantity.HasValue) content.Add(new StringContent(product.Quantity.Value.ToString()), "Quantity");
+            if (product.AvailableQuantity.HasValue) content.Add(new StringContent(product.AvailableQuantity.Value.ToString()), "AvailableQuantity");
+            if (product.CategoryId.HasValue) content.Add(new StringContent(product.CategoryId.Value.ToString()), "CategoryId");
+            if (product.SupplierId.HasValue) content.Add(new StringContent(product.SupplierId.Value.ToString()), "SupplierId");
+
+            if (file != null && file.Length > 0) {
+                var stream = file.OpenReadStream();
+                content.Add(new StreamContent(stream), "file", file.FileName);
+            }
         }
 
     }

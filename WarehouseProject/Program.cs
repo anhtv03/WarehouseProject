@@ -7,6 +7,7 @@ using WarehouseProject.Util;
 using WarehouseProject.Controllers;
 using WarehouseProject.Models.Entity;
 using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Models;
 
 namespace WarehouseProject {
     public class Program {
@@ -51,7 +52,12 @@ namespace WarehouseProject {
             //------------------
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options => {
+                //options.MapType<Enum>(() => new OpenApiSchema {
+                //    Type = "string",
+                //    Enum = Enum.GetNames(typeof(Enum)).Select(name => new OpenApiString(name)).ToList()
+                //});
+            });
 
             var app = builder.Build();
 

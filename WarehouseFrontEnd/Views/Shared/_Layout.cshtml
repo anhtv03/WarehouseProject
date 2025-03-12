@@ -28,7 +28,7 @@
                     <i class="fas fa-home"></i> Tổng quan
                 </a>
             </li>
-            <li><i class="fas fa-shopping-cart"></i> Đơn hàng</li>
+            @* <li><i class="fas fa-shopping-cart"></i> Đơn hàng</li> *@
             <li>
                 <span><i class="fas fa-box"></i> Sản phẩm <i class="fas fa-chevron-down submenu-indicator"></i></span>
                 <ul class="submenu">
@@ -40,10 +40,8 @@
                 <span><i class="fas fa-warehouse"></i> Quản lý kho <i class="fas fa-chevron-down submenu-indicator"></i></span>
                 <ul class="submenu">
                     <li>Tồn kho</li>
-                    <li>Đặt hàng nhập</li>
-                    <li>Nhập hàng</li>
-                    <li>Trả hàng nhập</li>
-                    <li>Chuyển kho</li>
+                    <li><a asp-action="Outbound" asp-controller="Order">Xuất hàng</a></li>
+                    <li><a asp-action="Inbound" asp-controller="Order">Nhập hàng</a></li>
                 </ul>
             </li>
             <li>
@@ -77,21 +75,14 @@
 
     <script>
                 document.addEventListener('DOMContentLoaded', function() {
-            // Get all menu items that have submenus
             const menuItems = document.querySelectorAll('.sidebar-menu > li');
 
-            // Add click event listeners to each menu item
             menuItems.forEach(function(item) {
-                // Only add click handlers to items that have submenus
                 if (item.querySelector('.submenu')) {
                     item.addEventListener('click', function(event) {
-                        // Prevent the click from bubbling up
                         event.stopPropagation();
-
-                        // Toggle the active-menu class on the clicked item
                         this.classList.toggle('active-menu');
 
-                        // If the clicked item now has the active-menu class, close all other menus
                         if (this.classList.contains('active-menu')) {
                             menuItems.forEach(function(otherItem) {
                                 if (otherItem !== item && otherItem.classList.contains('active-menu')) {
@@ -101,7 +92,6 @@
                         }
                     });
 
-                    // Prevent submenu clicks from toggling the parent menu
                     const submenuLinks = item.querySelectorAll('.submenu a');
                     submenuLinks.forEach(function(link) {
                         link.addEventListener('click', function(event) {

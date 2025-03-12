@@ -20,11 +20,11 @@ namespace WarehouseFrontEnd.Models.Entity
         public string? Note { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string? OrderType { get; set; }
 
         public virtual Customer? Customer { get; set; }
         public virtual Supplier? Supplier { get; set; }
         public virtual User? User { get; set; }
-        
         [JsonIgnore]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }

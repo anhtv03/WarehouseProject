@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WarehouseProject.Util;
 
 namespace WarehouseProject.Models.DTOs {
     public class OrderDTO {
@@ -17,5 +18,7 @@ namespace WarehouseProject.Models.DTOs {
 
         [StringLength(500, ErrorMessage = "Note cannot exceed 500 characters.")]
         public string? Note { get; set; }
+        public OrderTypeEnum? OrderType { get; set; }
+
     }
 }

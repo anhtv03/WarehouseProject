@@ -24,6 +24,7 @@ namespace WarehouseProject.Models.Entity
         public int? SupplierId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public bool? IsActive { get; set; }
 
         public virtual Category? Category { get; set; }
         public virtual Supplier? Supplier { get; set; }
