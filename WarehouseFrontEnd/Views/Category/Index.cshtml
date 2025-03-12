@@ -65,29 +65,6 @@
 
 @section Scripts {
     <script>
-        // Handling selectAll checkbox
-        document.addEventListener('DOMContentLoaded', function() {
-            const selectAllCheckbox = document.querySelector('thead input[type="checkbox"]');
-            const itemCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]');
-
-            selectAllCheckbox.addEventListener('change', function() {
-                const isChecked = this.checked;
-                itemCheckboxes.forEach(checkbox => {
-                    checkbox.checked = isChecked;
-                });
-            });
-
-            itemCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const allChecked = Array.from(itemCheckboxes).every(cb => cb.checked);
-                    const someChecked = Array.from(itemCheckboxes).some(cb => cb.checked);
-
-                    selectAllCheckbox.checked = allChecked;
-                    selectAllCheckbox.indeterminate = someChecked && !allChecked;
-                });
-            });
-        });
-
         function CreateCategory(){
             const categoryIndexUrl = '@Url.Action("Create", "Category")';
             console.log(categoryIndexUrl);
