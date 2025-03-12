@@ -30,6 +30,15 @@ namespace WarehouseProject.Util {
                     FullName = "Admin",
                     Role = 1
                 };
+                User staff = new User {
+                    Username = "staff01",
+                    Password = BCrypt.Net.BCrypt.HashPassword("123456"),
+                    FullName = "Staff",
+                    Address = "HCM",
+                    Phone = "0123456789",
+                    Email = "staff@gmail.com",
+                    Role = 2
+                };
                 _context.Users.Add(user);
                 _context.SaveChanges();
             }

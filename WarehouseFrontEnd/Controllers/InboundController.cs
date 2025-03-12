@@ -37,6 +37,7 @@ namespace WarehouseFrontEnd.Controllers {
                     i.Status,
                     i.Supplier,
                     i.Customer,
+                    i.Code,
                     i.User,
                     ProductCount = orderDetails
                                         .Where(od => od.OrderId == i.OrderId)

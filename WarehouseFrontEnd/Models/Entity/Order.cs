@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace WarehouseFrontEnd.Models.Entity
 {
@@ -21,12 +20,11 @@ namespace WarehouseFrontEnd.Models.Entity
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public string? OrderType { get; set; }
-
         public string? Code { get; set; }
+
         public virtual Customer? Customer { get; set; }
         public virtual Supplier? Supplier { get; set; }
         public virtual User? User { get; set; }
-        [JsonIgnore]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

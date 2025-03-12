@@ -77,9 +77,9 @@ namespace WarehouseFrontEnd.Controllers {
         public async Task<IActionResult> Create(ProductDTO product, IFormFile? file) {
             using (HttpClient client = new HttpClient()) {
                 using (var content = new MultipartFormDataContent()) {
-                    CreateContentProduct(product, file, content);
+                    var newContent = CreateContentProduct(product, file, content);
 
-                    HttpResponseMessage response = await client.PostAsync($"{urlProduct}", content);
+                    HttpResponseMessage response = await client.PostAsync($"{urlProduct}", newContent);
                     if (!response.IsSuccessStatusCode) {
                         var errorContent = await response.Content.ReadAsStringAsync();
                         ModelState.AddModelError("", errorContent);
@@ -95,9 +95,9 @@ namespace WarehouseFrontEnd.Controllers {
         public async Task<IActionResult> Edit(int id, ProductDTO product, IFormFile? file) {
             using (HttpClient client = new HttpClient()) {
                 using (var content = new MultipartFormDataContent()) {
-                    CreateContentProduct(product, file, content);
+                    var newContent = CreateContentProduct(product, file, content);
 
-                    HttpResponseMessage response = await client.PutAsync($"{urlProduct}/{id}", content);
+                    HttpResponseMessage response = await client.PutAsync($"{urlProduct}/{id}", newContent);
                     if (!response.IsSuccessStatusCode) {
                         var errorContent = await response.Content.ReadAsStringAsync();
                         ModelState.AddModelError("", errorContent);
@@ -106,6 +106,16 @@ namespace WarehouseFrontEnd.Controllers {
 
                     using (var getResponse = await client.GetAsync($"{urlProduct}/{id}")) {
                         if (getResponse.IsSuccessStatusCode) {
+                            UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
+                            if (current_user == null) {
+                                return RedirectToAction("Index", "Auth");
+                            } else {
+                                ViewBag.CurrentUser = current_user;
+                            }
+
+                            ViewBag.Categories = await LoadDataAsync<Category>(urlCategory);
+                            ViewBag.Suppliers = await LoadDataAsync<Supplier>(urlSupplier);
+
                             var jsonString = await getResponse.Content.ReadAsStringAsync();
                             var updatedProduct = JsonConvert.DeserializeObject<Product>(jsonString);
                             return View("Details", updatedProduct);
@@ -163,7 +173,7 @@ namespace WarehouseFrontEnd.Controllers {
                 SupplierId = dto.SupplierId ?? 0
             };
         }
-        private void CreateContentProduct(ProductDTO product, IFormFile? file, MultipartFormDataContent content) {
+        private MultipartFormDataContent CreateContentProduct(ProductDTO product, IFormFile? file, MultipartFormDataContent content) {
             content.Add(new StringContent(product.Name), "Name");
             content.Add(new StringContent(product.Description == null ? "" : product.Description), "Description");
             content.Add(new StringContent(product.Price.ToString()), "Price");
@@ -179,6 +189,7 @@ namespace WarehouseFrontEnd.Controllers {
                 var stream = file.OpenReadStream();
                 content.Add(new StreamContent(stream), "file", file.FileName);
             }
+            return content;
         }
 
     }

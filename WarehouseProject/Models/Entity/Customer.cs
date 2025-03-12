@@ -19,7 +19,6 @@ namespace WarehouseProject.Models.Entity
         public string? Note { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-
         [JsonIgnore]
         public virtual ICollection<Order> Orders { get; set; }
     }

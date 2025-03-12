@@ -15,7 +15,7 @@ namespace WarehouseFrontEnd.Controllers {
             if (current_user == null) {
                 return RedirectToAction("Index", "Auth");
             } else {
-                ViewBag.UserRole = current_user;
+                ViewBag.CurrentUser = current_user;
             }
 
 
