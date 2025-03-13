@@ -80,7 +80,7 @@
                                 }
                                 <td>@(item.Supplier?.Name ?? "Chưa có nhà cung cấp")</td>
                                 <td>@(item.ProductCount)</td>
-                                <td>@item.TotalCost</td>
+                                <td>@item.TotalCost.ToString("N0") VND</td>
                             </tr>
                         }
                     </tbody>

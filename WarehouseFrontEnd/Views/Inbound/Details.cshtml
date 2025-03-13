@@ -1,0 +1,189 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Chi tiết đơn nhập hàng";
+}
+@model Order
+
+<div class="main-content">
+    <div class="po-header">
+        <a asp-action="Index" asp-controller="Inbound" class="btn btn-outline-secondary me-2">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+        <span class="po-number">@Model.Code</span>
+        <span class="po-date">@Model.OrderDate</span>
+        @if (Model.Status == "pending") {
+            <span class="status-badge-warning">Đang chờ xử lý</span>
+        } else {
+            <span class="status-badge-success">Đã xử lý</span>
+        }
+        <div class="action-buttons">
+            <button class="action-button">
+                <i class="fas fa-edit"></i> Sửa đơn
+            </button>
+            <button class="action-button">
+                <i class="fas fa-ban"></i> Hủy đơn
+            </button>
+            <button class="action-button">
+                <i class="fas fa-print"></i> In đơn
+            </button>
+            <button class="action-button">
+                <i class="fas fa-boxes"></i> Nhập hàng
+            </button>
+        </div>
+    </div>
+
+    <div class="po-content">
+        <div style="display: grid; grid-template-columns: 2fr 1fr; grid-gap: 20px;">
+            <div>
+                <div class="po-section">
+                    <div class="po-section-header">
+                        Sản phẩm
+                    </div>
+                    <div class="po-section-body">
+                        <table class="product-table">
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Số lượng</th>
+                                    <th>Đơn giá</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center;">
+                                            <img src="/api/placeholder/40/40" alt="Sữa rửa mặt Eucerin" class="product-img">
+                                            <div style="margin-left: 10px;">
+                                                <div class="product-name">Sữa rửa mặt Eucerin</div>
+                                                <div class="product-sku">SKU: SKU21</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>1</td>
+                                    <td>0đ</td>
+                                    <td>0đ</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center;">
+                                            <img src="/api/placeholder/40/40" alt="Kem dưỡng da V7 Toning Light" class="product-img">
+                                            <div style="margin-left: 10px;">
+                                                <div class="product-name">Kem dưỡng da V7 Toning Light</div>
+                                                <div class="product-sku">SKU: SKU19</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>1</td>
+                                    <td>0đ</td>
+                                    <td>0đ</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center;">
+                                            <img src="/api/placeholder/40/40" alt="Kem dưỡng da Bioaqua" class="product-img">
+                                            <div style="margin-left: 10px;">
+                                                <div class="product-name">Kem dưỡng da Bioaqua</div>
+                                                <div class="product-sku">SKU: SKU18</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>1</td>
+                                    <td>0đ</td>
+                                    <td>0đ</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center;">
+                                            <img src="/api/placeholder/40/40" alt="Kem dưỡng da Laneige" class="product-img">
+                                            <div style="margin-left: 10px;">
+                                                <div class="product-name">Kem dưỡng da Laneige</div>
+                                                <div class="product-sku">SKU: SKU16</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>1</td>
+                                    <td>0đ</td>
+                                    <td>0đ</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="po-section">
+                    <div class="po-section-header">
+                        Thanh toán
+                    </div>
+                    <div class="total-section">
+                        <div class="total-row">
+                            <div class="total-label">Tổng tiền</div>
+                            <div class="total-value">4 sản phẩm</div>
+                            <div class="total-value">0đ</div>
+                        </div>
+                        <div class="total-row">
+                            <div class="total-label">Chiết khấu đơn</div>
+                            <div class="total-value">------</div>
+                            <div class="total-value">0đ</div>
+                        </div>
+                        <div class="total-row">
+                            <div class="total-label">Tiền cần trả NCC</div>
+                            <div class="total-value"></div>
+                            <div class="total-value">0đ</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            @* ================supplier============== *@
+            <div>
+                <div class="po-section">
+                    <div class="po-section-header">
+                        Nhà cung cấp
+                    </div>
+                    <div class="supplier-info">
+                        <div class="supplier-name">
+                            <div style="display: flex; align-items: center;">
+                                <div class="supplier-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span>@Model.Supplier?.Name</span>
+                            </div>
+                        </div>
+                        <div class="supplier-detail">
+                            <strong>Thông tin nhà cung cấp</strong>
+                        </div>
+                        <div class="supplier-detail">@Model.Supplier?.Email</div>
+                        <div class="supplier-detail">@Model.Supplier?.Phone</div>
+                        <div class="supplier-address">@Model.Supplier?.Address</div>
+                    </div>
+                </div>
+
+                <div class="po-section">
+                    <div class="po-section-header">
+                        Thông tin bổ sung
+                    </div>
+                    <div class="po-section-body">
+                        <div class="form-group">
+                            <label class="form-label">Nhân viên phụ trách</label>
+                            <select class="dropdown-select">
+                                <option selected>Nguyễn Huy Thái</option>
+                                <option>Nhân viên 1</option>
+                                <option>Nhân viên 2</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ngày nhập dự kiến</label>
+                            <select class="dropdown-select">
+                                <option selected>Chọn ngày nhập dự kiến</option>
+                                <option>15/03/2025</option>
+                                <option>16/03/2025</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

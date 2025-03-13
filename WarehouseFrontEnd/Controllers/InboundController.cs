@@ -53,9 +53,27 @@ namespace WarehouseFrontEnd.Controllers {
             return View();
         }
 
-        // GET: InboundController/Details/5
-        public ActionResult Details(int id) {
-            return View();
+        public async Task<IActionResult> Details(int id) {
+            UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
+            if (current_user == null) {
+                return RedirectToAction("Index", "Auth");
+            } else {
+                ViewBag.CurrentUser = current_user;
+            }
+
+            Order order = new Order();
+            using (HttpClient client = new HttpClient()) {
+                using (HttpResponseMessage res = await client.GetAsync($"{urlOrder}/{id}")) {
+                    using (HttpContent content = res.Content) {
+                        string data = await content.ReadAsStringAsync();
+                        order = JsonConvert.DeserializeObject<Order>(data);
+                    }
+                }
+            }
+
+            ViewBag.Customers = await LoadDataAsync<Customer>(urlCustomer);
+            ViewBag.Suppliers = await LoadDataAsync<Supplier>(urlSupplier);
+            return View(order);
         }
 
         // GET: InboundController/Create
@@ -120,20 +138,6 @@ namespace WarehouseFrontEnd.Controllers {
             return dataList;
         }
 
-        //private string getSearch(string? search) {
-        //    if (search == null) {
-        //        return "";
-        //    }
-        //    var firstChar = search.Substring(0, 2);
-        //    var lastChar = search.Substring(2);
-
-        //    if (firstChar != "IG") {
-        //        return "WTEIYADABFI";
-        //    }
-
-        //    var value = int.Parse(lastChar);
-        //    return value.ToString();
-        //}
 
     }
 }

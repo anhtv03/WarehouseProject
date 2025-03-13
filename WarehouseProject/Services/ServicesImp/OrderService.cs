@@ -70,7 +70,7 @@ namespace WarehouseProject.Services.ServicesImp {
                 var query = _context.Orders.AsQueryable();
 
                 if (!string.IsNullOrEmpty(search)) {
-                    query = query.Where(p => p.Code.ToString().Contains(search) ||
+                    query = query.Where(p => p.Code.Contains(search) ||
                                              p.Status.Contains(search));
                 }
 
