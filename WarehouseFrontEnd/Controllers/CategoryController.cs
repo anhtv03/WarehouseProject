@@ -3,31 +3,22 @@ using Newtonsoft.Json;
 using WarehouseFrontEnd.Models.DTOs;
 using WarehouseFrontEnd.Models.Entity;
 
-namespace WarehouseFrontEnd.Controllers
-{
-    public class CategoryController : Controller
-    {
+namespace WarehouseFrontEnd.Controllers {
+    public class CategoryController : Controller {
         private readonly string urlCategory = "https://localhost:5100/api/Categories";
 
-        public async Task<IActionResult> Index(string? query)
-        {
+        public async Task<IActionResult> Index(string? query) {
             UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
-            if (current_user == null)
-            {
+            if (current_user == null) {
                 return RedirectToAction("Index", "Auth");
-            }
-            else
-            {
+            } else {
                 ViewBag.CurrentUser = current_user;
             }
 
             List<Category> list = new List<Category>();
-            if (query != null)
-            {
+            if (query != null) {
                 list = await LoadDataAsync<Category>($"{urlCategory}?search={query}");
-            }
-            else
-            {
+            } else {
                 list = await LoadDataAsync<Category>(urlCategory);
             }
             ViewBag.SearchValue = query ?? "";
@@ -35,26 +26,19 @@ namespace WarehouseFrontEnd.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Details(int id)
-        {
+        public async Task<IActionResult> Details(int id) {
             UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
-            if (current_user == null)
-            {
+            if (current_user == null) {
                 return RedirectToAction("Index", "Auth");
-            }
-            else
-            {
+            } else {
                 ViewBag.CurrentUser = current_user;
             }
 
             Category category = new Category();
 
-            using (HttpClient client = new HttpClient())
-            {
-                using (HttpResponseMessage res = await client.GetAsync($"{urlCategory}/{id}"))
-                {
-                    using (HttpContent content = res.Content)
-                    {
+            using (HttpClient client = new HttpClient()) {
+                using (HttpResponseMessage res = await client.GetAsync($"{urlCategory}/{id}")) {
+                    using (HttpContent content = res.Content) {
                         string data = await content.ReadAsStringAsync();
                         category = JsonConvert.DeserializeObject<Category>(data);
                     }
@@ -63,15 +47,11 @@ namespace WarehouseFrontEnd.Controllers
             return View(category);
         }
 
-        public async Task<IActionResult> Create()
-        {
+        public async Task<IActionResult> Create() {
             UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
-            if (current_user == null)
-            {
+            if (current_user == null) {
                 return RedirectToAction("Index", "Auth");
-            }
-            else
-            {
+            } else {
                 ViewBag.CurrentUser = current_user;
             }
             return View();
@@ -79,19 +59,13 @@ namespace WarehouseFrontEnd.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CategoryDTO category)
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                using (HttpResponseMessage res = await client.PostAsJsonAsync(urlCategory, category))
-                {
+        public async Task<IActionResult> Create(CategoryDTO category) {
+            using (HttpClient client = new HttpClient()) {
+                using (HttpResponseMessage res = await client.PostAsJsonAsync(urlCategory, category)) {
                     var data = await res.Content.ReadAsStringAsync();
-                    if (res.IsSuccessStatusCode)
-                    {
+                    if (res.IsSuccessStatusCode) {
                         return RedirectToAction("Index", "Category");
-                    }
-                    else
-                    {
+                    } else {
                         ModelState.AddModelError("", data);
                         return View("Create", ConvertToCategory(null, category));
                     }
@@ -101,19 +75,13 @@ namespace WarehouseFrontEnd.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CategoryDTO category)
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                using (HttpResponseMessage res = await client.PutAsJsonAsync($"{urlCategory}/{id}", category))
-                {
+        public async Task<IActionResult> Edit(int id, CategoryDTO category) {
+            using (HttpClient client = new HttpClient()) {
+                using (HttpResponseMessage res = await client.PutAsJsonAsync($"{urlCategory}/{id}", category)) {
                     var data = await res.Content.ReadAsStringAsync();
-                    if (res.IsSuccessStatusCode)
-                    {
+                    if (res.IsSuccessStatusCode) {
                         return View("Details", ConvertToCategory(id, category));
-                    }
-                    else
-                    {
+                    } else {
                         ModelState.AddModelError("", data);
                         return View("Details", ConvertToCategory(null, category));
                     }
@@ -121,23 +89,16 @@ namespace WarehouseFrontEnd.Controllers
             }
         }
 
-        public async Task<IActionResult> Delete(int id)
-        {
-            using (HttpClient client = new HttpClient())
-            {
+        public async Task<IActionResult> Delete(int id) {
+            using (HttpClient client = new HttpClient()) {
                 HttpResponseMessage res = await client.DeleteAsync($"{urlCategory}/{id}");
-                if (res.IsSuccessStatusCode)
-                {
+                if (res.IsSuccessStatusCode) {
                     return RedirectToAction("Index", "Category");
-                }
-                else
-                {
+                } else {
                     Category category = new Category();
                     ModelState.AddModelError("", "An error occurred while processing your request.");
-                    using (var getResponse = await client.GetAsync($"{urlCategory}/{id}"))
-                    {
-                        if (getResponse.IsSuccessStatusCode)
-                        {
+                    using (var getResponse = await client.GetAsync($"{urlCategory}/{id}")) {
+                        if (getResponse.IsSuccessStatusCode) {
                             var jsonString = await getResponse.Content.ReadAsStringAsync();
                             category = JsonConvert.DeserializeObject<Category>(jsonString);
                         }
@@ -148,15 +109,11 @@ namespace WarehouseFrontEnd.Controllers
         }
 
         //=======================================================================================================
-        private async Task<List<T>> LoadDataAsync<T>(string url)
-        {
+        private async Task<List<T>> LoadDataAsync<T>(string url) {
             List<T> dataList = new List<T>();
-            using (HttpClient client = new HttpClient())
-            {
-                using (HttpResponseMessage res = await client.GetAsync(url))
-                {
-                    using (HttpContent content = res.Content)
-                    {
+            using (HttpClient client = new HttpClient()) {
+                using (HttpResponseMessage res = await client.GetAsync(url)) {
+                    using (HttpContent content = res.Content) {
                         string data = await content.ReadAsStringAsync();
                         dataList = JsonConvert.DeserializeObject<List<T>>(data);
                     }
@@ -165,10 +122,8 @@ namespace WarehouseFrontEnd.Controllers
             return dataList;
         }
 
-        private Category ConvertToCategory(int? id, CategoryDTO dto)
-        {
-            return new Category
-            {
+        private Category ConvertToCategory(int? id, CategoryDTO dto) {
+            return new Category {
                 CategoryId = id ?? 0,
                 Name = dto.Name,
                 Description = dto.Description,

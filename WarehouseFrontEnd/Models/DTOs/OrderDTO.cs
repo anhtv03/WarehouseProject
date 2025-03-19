@@ -4,7 +4,7 @@ using WarehouseFrontEnd.Util;
 namespace WarehouseFrontEnd.Models.DTOs {
     public class OrderDTO {
         [StringLength(50, ErrorMessage = "Status cannot exceed 50 characters.")]
-        public string Status { get; set; } = null!;
+        public string? Status { get; set; } = null!;
 
         [Range(1, int.MaxValue, ErrorMessage = "User ID must be a positive integer.")]
         public int? UserId { get; set; }
@@ -20,5 +20,8 @@ namespace WarehouseFrontEnd.Models.DTOs {
 
         [EnumDataType(typeof(OrderTypeEnum), ErrorMessage = "Order type must be either 'Inbound' or 'Outbound'.")]
         public string? OrderType { get; set; }
+
+
+
     }
 }

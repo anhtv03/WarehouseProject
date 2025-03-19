@@ -7,12 +7,6 @@
     <div class="page-title">
         <h2>Danh sách sản phẩm</h2>
         <div>
-            <button class="btn btn-outline-secondary me-2">
-                <i class="fas fa-file-export"></i> Xuất file
-            </button>
-            <button class="btn btn-outline-secondary me-3">
-                <i class="fas fa-file-import"></i> Nhập file
-            </button>
             <button id="addProduct" class="btn btn-primary" onclick="CreateProduct()">
                 <i class="fas fa-plus-circle"></i> Thêm sản phẩm
             </button>
@@ -59,8 +53,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in ViewBag.Products)
-                        {
+                        @foreach (var item in ViewBag.Products) {
                             <tr>
                                 <td><input type="checkbox" class="form-check-input"></td>
                                 <td>
@@ -121,7 +114,7 @@
         function getSearch(){
             const search = document.getElementById('searchText');
             const searchValue = search.value.trim();
-            window.location.href = `${productIndexUrl}?query=${encodeURIComponent(searchValue)}`; 
+            window.location.href = `${productIndexUrl}?query=${encodeURIComponent(searchValue)}`;
         }
     </script>
 }

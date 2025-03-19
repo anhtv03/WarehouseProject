@@ -1,4 +1,4 @@
-html {
+﻿html {
     font-size: 14px;
 }
 
@@ -381,6 +381,15 @@ body {
     font-weight: 500;
 }
 
+.status-badge-cancel {
+    background-color: #bb2d3b;
+    color: #f4abb2;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
 .action-buttons {
     margin-left: auto;
     display: flex;
@@ -438,6 +447,9 @@ body {
 }
 
 .po-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 15px;
     border-bottom: 1px solid var(--border-color);
     font-size: 16px;
@@ -586,4 +598,80 @@ body {
     margin-left: auto;
     color: #6c757d;
     cursor: pointer;
+}
+
+/*========================================== modal choose product =============================*/
+.product-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .product-table th,
+    .product-table td {
+        padding: 12px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .product-table th {
+        background-color: #f8f9fa;
+        text-align: left;
+        font-weight: 600;
+    }
+
+.product-name {
+    font-weight: 500;
+}
+
+.quantity-input {
+    width: 80px;
+}
+
+.total-section {
+    margin-top: 20px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+    .total-row:last-child {
+        border-bottom: none;
+        font-weight: bold;
+    }
+
+.total-label {
+    flex: 1;
+}
+
+.total-value {
+    flex: 1;
+    text-align: right;
+}
+
+#productList tr:hover {
+    background-color: #f8f9fa;
+}
+
+#searchProduct {
+    margin-bottom: 15px;
+}
+
+.product-quantity {
+    width: 80px;
+}
+
+.product-table th:last-child,
+.product-table td:last-child {
+    width: 50px;
+    text-align: center;
 }

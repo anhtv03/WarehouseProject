@@ -1,0 +1,388 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Chỉnh sửa đơn nhập hàng";
+}
+@model Order
+@{
+    var cu = (UserViewDTO)ViewBag.CurrentUser;
+}
+
+<div class="main-content">
+    <div class="po-header">
+        <a asp-action="Index" asp-controller="Inbound" class="btn btn-outline-secondary me-2">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+        <span class="po-number">@Model.Code</span>
+        <span class="po-date">@Model.OrderDate.ToString("dd/MM/yyyy")</span>
+
+        <div class="action-buttons">
+            <button id="UpdateOrder" class="action-button" style="background-color: #0e83e9;color: #FFF;font-weight: bold;">
+                Cập nhật đơn đặt hàng
+            </button>
+        </div>
+    </div>
+
+    <div class="po-content">
+        <form id="editForm" method="post" asp-action="Edit" asp-controller="Inbound" asp-route-id="@Model.OrderId">
+            <input type="hidden" asp-for="OrderId" />
+            <input type="hidden" asp-for="OrderDate" />
+            <input type="hidden" asp-for="Code" />
+            <input type="hidden" asp-for="OrderType" value="Inbound" />
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; grid-gap: 20px;">
+                <div>
+                    <div class="po-section">
+                        <div class="po-section-header">
+                            <span>Sản phẩm</span>
+                            <button type="button" class="btn btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#productSelectionModal">Chọn sản phẩm</button>
+                        </div>
+                        <div class="po-section-body">
+                            <table class="product-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sản phẩm</th>
+                                        <th>Số lượng</th>
+                                        <th>Đơn giá</th>
+                                        <th>Thành tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Danh sách sản phẩm sẽ được load vào đây -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="po-section">
+                        <div class="po-section-header">
+                            Thanh toán
+                        </div>
+                        <div class="total-section">
+                            <div class="total-row">
+                                <div class="total-label">Tổng tiền</div>
+                                <div class="total-value">0 sản phẩm</div>
+                                <div class="total-value">0 VND</div>
+                            </div>
+                            <div class="total-row">
+                                <div class="total-label">Chiết khấu đơn</div>
+                                <div class="total-value">------</div>
+                                <div class="total-value">0 VND</div>
+                            </div>
+                            <div class="total-row">
+                                <div class="total-label">Tiền cần trả</div>
+                                <div class="total-value"></div>
+                                <div class="total-value">0 VND</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="po-section">
+                        <div class="po-section-header">
+                            Nhà cung cấp
+                        </div>
+                        <div class="po-section-body">
+                            <div class="form-group">
+                                <label asp-for="SupplierId" class="form-label">Nhà cung cấp</label>
+                                <select class="form-select" asp-for="SupplierId" asp-items="@(new SelectList(ViewBag.Suppliers, "SupplierId", "Name"))"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="po-section">
+                        <div class="po-section-header">
+                            Thông tin bổ sung
+                        </div>
+                        <div class="po-section-body">
+                            <div class="form-group">
+                                <label asp-for="UserId" class="form-label">Nhân viên phụ trách</label>
+                                <select class="form-select" asp-for="UserId" asp-items="@(new SelectList(ViewBag.Users, "UserId", "FullName"))"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal for selecting products -->
+<div class="modal fade" id="productSelectionModal" tabindex="-1" aria-labelledby="productSelectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productSelectionModalLabel">Chọn sản phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="10%"><input type="checkbox" id="selectAllProducts"></th>
+                                <th width="40%">Tên sản phẩm</th>
+                                <th width="25%">Giá nhập</th>
+                                <th width="25%">Số lượng</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productList"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="confirmProductSelection">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            let selectedProducts = [];
+
+            // Load existing products from the model
+        @foreach (var item in Model.OrderDetails) {
+            <text>
+                        selectedProducts.push({
+                            productId: @item.ProductId,
+                            name: "@item.Product.Name",
+                            costPrice: @item.Product.CostPrice,
+                            images: "@item.Product.Images",
+                            quantity: @item.Quantity
+                        });
+            </text>
+        }
+
+            renderSelectedProducts();
+            calculateTotal();
+
+            // Calculate totals for price and quantity
+            function calculateTotal() {
+                let totalQuantity = 0;
+                let totalAmount = 0;
+
+                selectedProducts.forEach(product => {
+                    totalQuantity += parseInt(product.quantity);
+                    totalAmount += parseInt(product.quantity) * parseFloat(product.costPrice);
+                });
+
+                $('.total-row:nth-child(1) .total-value:nth-child(2)').text(totalQuantity + ' sản phẩm');
+                $('.total-row:nth-child(1) .total-value:nth-child(3)').text(totalAmount.toLocaleString('vi-VN') + ' VND');
+                $('.total-row:nth-child(3) .total-value:nth-child(3)').text(totalAmount.toLocaleString('vi-VN') + ' VND');
+            }
+
+            // Form submission handler
+            $('#UpdateOrder').on('click', function() {
+                if (selectedProducts.length === 0) {
+                    alert('Vui lòng chọn ít nhất một sản phẩm!');
+                    return;
+                }
+
+                selectedProducts.forEach((product, index) => {
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: `OrderItems[${index}].ProductId`,
+                        value: product.productId
+                    }).appendTo('#editForm');
+
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: `OrderItems[${index}].Quantity`,
+                        value: product.quantity
+                    }).appendTo('#editForm');
+                });
+
+                $('#editForm').submit();
+            });
+
+            // Function to fetch products
+            function loadProducts() {
+                $.ajax({
+                    url: "https://localhost:5100/api/Products",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(response) {
+                        renderProductList(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error loading products:", error);
+                    }
+                });
+            }
+
+            // Automatically load products
+            $('#productSelectionModal').on('show.bs.modal', function() {
+                loadProducts();
+            });
+
+            // Render the product list in the modal
+            function renderProductList(products) {
+                const tbody = $("#productList");
+                tbody.empty();
+
+                products.forEach(product => {
+                    const selectedProduct = selectedProducts.find(p => p.productId === product.productId);
+                    const isSelected = selectedProduct !== undefined;
+                    const quantity = isSelected ? selectedProduct.quantity : 1;
+
+                    tbody.append(`
+                        <tr>
+                            <td><input type="checkbox" class="product-checkbox" data-id="${product.productId}" ${isSelected ? 'checked' : ''}></td>
+                            <td>${product.name}</td>
+                            <td>${product.costPrice.toLocaleString('vi-VN')} VND</td>
+                            <td><input type="number" class="form-control quantity-input" data-id="${product.productId}" value="${quantity}" min="1"></td>
+                        </tr>
+                    `);
+                });
+            }
+
+            // Render selected products in the main table
+            function renderSelectedProducts() {
+                const tbody = $(".product-table tbody");
+                tbody.empty();
+
+                selectedProducts.forEach((product, index) => {
+                    const totalPrice = product.quantity * product.costPrice;
+
+                    tbody.append(`
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center;">
+                                    <img src="${product.images}" alt="${product.name}" class="product-img" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <div style="margin-left: 10px;">
+                                        <div class="product-name">${product.name}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control quantity-input-main" value="${product.quantity}" min="1" data-index="${index}">
+                            </td>
+                            <td>${product.costPrice.toLocaleString('vi-VN')} VND</td>
+                            <td>${totalPrice.toLocaleString('vi-VN')} VND</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-danger remove-product" data-index="${index}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                // Add event listeners for quantity changes and remove buttons
+                $('.quantity-input-main').off('change').on('change', function() {
+                    const index = parseInt($(this).data('index'));
+                    const newQuantity = parseInt($(this).val());
+
+                    if (newQuantity > 0) {
+                        selectedProducts[index].quantity = newQuantity;
+                        calculateTotal();
+                    }
+                });
+
+                $('.remove-product').off('click').on('click', function() {
+                    const index = parseInt($(this).data('index'));
+                    selectedProducts.splice(index, 1);
+                    renderSelectedProducts();
+                    calculateTotal();
+                });
+            }
+
+            // Handle product selection/deselection in modal
+            $(document).on('change', '.product-checkbox', function() {
+                const productId = $(this).data('id');
+                const isChecked = $(this).is(':checked');
+                const quantity = parseInt($(`.quantity-input[data-id="${productId}"]`).val()) || 1;
+
+                if (isChecked) {
+                    if (!selectedProducts.some(p => p.productId === productId)) {
+                        $.ajax({
+                            url: `https://localhost:5100/api/Products/${productId}`,
+                            type: "GET",
+                            dataType: "json",
+                            success: function(productData) {
+                                selectedProducts.push({
+                                    productId: productData.productId,
+                                    name: productData.name,
+                                    costPrice: productData.costPrice,
+                                    images: productData.images,
+                                    quantity: quantity
+                                });
+                                renderSelectedProducts();
+                                calculateTotal();
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error fetching product details:", error);
+                            }
+                        });
+                    }
+                } else {
+                    selectedProducts = selectedProducts.filter(p => p.productId !== productId);
+                    renderSelectedProducts();
+                    calculateTotal();
+                }
+            });
+
+            // Handle quantity changes in modal
+            $(document).on('change', '.quantity-input', function() {
+                const productId = $(this).data('id');
+                const quantity = parseInt($(this).val()) || 1;
+                const product = selectedProducts.find(p => p.productId === productId);
+
+                if (product) {
+                    product.quantity = quantity;
+                    renderSelectedProducts();
+                    calculateTotal();
+                }
+            });
+
+            // Select/deselect all products
+            $('#selectAllProducts').on('change', function() {
+                const isChecked = $(this).is(':checked');
+                $('.product-checkbox').prop('checked', isChecked);
+
+                if (isChecked) {
+                    $('.product-checkbox').each(function() {
+                        const productId = $(this).data('id');
+                        const quantity = parseInt($(`.quantity-input[data-id="${productId}"]`).val()) || 1;
+
+                        if (!selectedProducts.some(p => p.productId === productId)) {
+                            $.ajax({
+                                url: `https://localhost:5100/api/Products/${productId}`,
+                                type: "GET",
+                                dataType: "json",
+                                async: false,
+                                success: function(productData) {
+                                    selectedProducts.push({
+                                        productId: productData.productId,
+                                        name: productData.name,
+                                        costPrice: productData.costPrice,
+                                        images: productData.images,
+                                        quantity: quantity
+                                    });
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error("Error fetching product details:", error);
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    selectedProducts = [];
+                }
+
+                renderSelectedProducts();
+                calculateTotal();
+            });
+
+            // Confirm product selection
+            $('#confirmProductSelection').on('click', function() {
+                renderSelectedProducts();
+                calculateTotal();
+                $('#productSelectionModal').modal('hide');
+            });
+        });
+    </script>
+}

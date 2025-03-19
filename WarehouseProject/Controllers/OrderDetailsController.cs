@@ -17,13 +17,13 @@ namespace WarehouseProject.Controllers {
             var list = _service.GetAll();
             return Ok(list);
         }
-        
+
         [HttpGet("Order/{id}")]
         public ActionResult GetByOrderId([FromRoute] int id) {
             var list = _service.GetByOrderId(id);
             return Ok(list);
         }
-        
+
         [HttpGet("Product/{id}")]
         public ActionResult GetByProductId([FromRoute] int id) {
             var list = _service.GetByProductId(id);
@@ -59,6 +59,21 @@ namespace WarehouseProject.Controllers {
             }
         }
 
+        [HttpPost("Add")]
+        public ActionResult CreateList([FromBody] List<OrderDetailDTO> orders) {
+            try {
+                foreach (var order in orders) {
+                    var result = _service.Create(order);
+                    if (!result.isSuccess) {
+                        return BadRequest(result.message);
+                    }
+                }
+                return Created("", "Order Details added successfully");
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut("{id}")]
         public ActionResult Update([FromRoute] int id, [FromBody] OrderDetailDTO order) {
             try {
@@ -77,6 +92,20 @@ namespace WarehouseProject.Controllers {
         public ActionResult Delete([FromRoute] int id) {
             try {
                 var result = _service.Delete(id);
+                if (result.isSuccess) {
+                    return Ok(result.message);
+                } else {
+                    return BadRequest(result.message);
+                }
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("Order/{id}")]
+        public ActionResult DeleteByOrderId([FromRoute] int id) {
+            try {
+                var result = _service.DeleteByOrderId(id);
                 if (result.isSuccess) {
                     return Ok(result.message);
                 } else {

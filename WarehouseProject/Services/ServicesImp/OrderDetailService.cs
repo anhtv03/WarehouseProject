@@ -19,7 +19,12 @@ namespace WarehouseProject.Services.ServicesImp {
                 if (entity.ProductId.HasValue && !_context.Products.Any(s => s.ProductId == entity.ProductId)) {
                     return (false, "Product does not exist.");
                 }
-                var price = _context.Products.FirstOrDefault(p => p.ProductId == entity.ProductId).Price;
+                decimal price = 0;
+                if(entity.orderType == "Inbound") {
+                    price = _context.Products.FirstOrDefault(p => p.ProductId == entity.ProductId).CostPrice;
+                } else if (entity.orderType == "Outbound") {
+                    price = _context.Products.FirstOrDefault(p => p.ProductId == entity.ProductId).Price;
+                }
                 var ordd = new OrderDetail {
                     ProductId = entity.ProductId,
                     OrderId = entity.OrderId,
@@ -46,6 +51,22 @@ namespace WarehouseProject.Services.ServicesImp {
                 }
 
                 _context.OrderDetails.Remove(order);
+                _context.SaveChanges();
+                return (true, "Delete successful");
+            } catch (Exception ex) {
+                return (false, ex.Message);
+            }
+        }
+
+        public (bool isSuccess, string message) DeleteByOrderId(int id) {
+            try {
+                var order = _context.OrderDetails.Where(p => p.OrderId == id).ToList();
+
+                if (order == null) {
+                    return (false, "No found to delete.");
+                }
+
+                _context.OrderDetails.RemoveRange(order);
                 _context.SaveChanges();
                 return (true, "Delete successful");
             } catch (Exception ex) {
@@ -121,7 +142,12 @@ namespace WarehouseProject.Services.ServicesImp {
                     return (false, "Product does not exist.");
                 }
 
-                var price = _context.Products.FirstOrDefault(p => p.ProductId == entity.ProductId).Price;
+                decimal price = 0;
+                if (entity.orderType == "Inbound") {
+                    price = _context.Products.FirstOrDefault(p => p.ProductId == entity.ProductId).CostPrice;
+                } else if (entity.orderType == "Outbound") {
+                    price = _context.Products.FirstOrDefault(p => p.ProductId == entity.ProductId).Price;
+                }
                 order.ProductId = entity.ProductId;
                 order.OrderId = entity.OrderId;
                 order.Quantity = entity.Quantity;

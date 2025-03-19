@@ -13,5 +13,8 @@ namespace WarehouseFrontEnd.Models.DTOs {
         [Required(ErrorMessage = "Quantity is required.")]
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be a positive integer.")]
         public int Quantity { get; set; }
+
+        public string? orderType { get; set; }
+
     }
 }

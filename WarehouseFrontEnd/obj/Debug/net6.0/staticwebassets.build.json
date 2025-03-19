@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Vgep6CYOC7TedjTuDCOHsO5oxeof4T30QhmjtSC4vEA=",
+  "Hash": "Iqn8hAmuazOkoDanLnag3xOGdSdO2zMfax98Exs1xCU=",
   "Source": "WarehouseFrontEnd",
   "BasePath": "_content/WarehouseFrontEnd",
   "Mode": "Default",
@@ -73,8 +73,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "y87m1zn1oy",
-      "Integrity": "znS5LrkQ6EW+pT4w9HhfYPRObqQFeeW8tlFkVDt5YYg=",
+      "Fingerprint": "3pkb1ttqgc",
+      "Integrity": "eT0CzDBlVCyhSZPTykThh39Zg4e9NiPvB69SWd0TYF8=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\site.css"
@@ -1321,6 +1321,51 @@
   ],
   "Endpoints": [
     {
+      "Route": "css/site.3pkb1ttqgc.css",
+      "AssetFile": "F:\\C#.NET\\PRN231\\WarehouseProject\\WarehouseFrontEnd\\wwwroot\\css\\site.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "12545"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"eT0CzDBlVCyhSZPTykThh39Zg4e9NiPvB69SWd0TYF8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 19 Mar 2025 00:54:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "3pkb1ttqgc"
+        },
+        {
+          "Name": "label",
+          "Value": "css/site.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-eT0CzDBlVCyhSZPTykThh39Zg4e9NiPvB69SWd0TYF8="
+        }
+      ]
+    },
+    {
       "Route": "css/site.css",
       "AssetFile": "F:\\C#.NET\\PRN231\\WarehouseProject\\WarehouseFrontEnd\\wwwroot\\css\\site.css",
       "Selectors": [],
@@ -1331,7 +1376,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "10842"
+          "Value": "12545"
         },
         {
           "Name": "Content-Type",
@@ -1339,11 +1384,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"znS5LrkQ6EW+pT4w9HhfYPRObqQFeeW8tlFkVDt5YYg=\""
+          "Value": "\"eT0CzDBlVCyhSZPTykThh39Zg4e9NiPvB69SWd0TYF8=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 13 Mar 2025 13:51:12 GMT"
+          "Value": "Wed, 19 Mar 2025 00:54:39 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1353,52 +1398,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-znS5LrkQ6EW+pT4w9HhfYPRObqQFeeW8tlFkVDt5YYg="
-        }
-      ]
-    },
-    {
-      "Route": "css/site.y87m1zn1oy.css",
-      "AssetFile": "F:\\C#.NET\\PRN231\\WarehouseProject\\WarehouseFrontEnd\\wwwroot\\css\\site.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "10842"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"znS5LrkQ6EW+pT4w9HhfYPRObqQFeeW8tlFkVDt5YYg=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Thu, 13 Mar 2025 13:51:12 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "y87m1zn1oy"
-        },
-        {
-          "Name": "label",
-          "Value": "css/site.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-znS5LrkQ6EW+pT4w9HhfYPRObqQFeeW8tlFkVDt5YYg="
+          "Value": "sha256-eT0CzDBlVCyhSZPTykThh39Zg4e9NiPvB69SWd0TYF8="
         }
       ]
     },
@@ -6263,7 +6263,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 12 Mar 2025 16:01:10 GMT"
+          "Value": "Thu, 13 Mar 2025 14:09:16 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6300,7 +6300,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 12 Mar 2025 16:01:10 GMT"
+          "Value": "Thu, 13 Mar 2025 14:09:16 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6337,7 +6337,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 12 Mar 2025 16:01:10 GMT"
+          "Value": "Thu, 13 Mar 2025 14:09:16 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6382,7 +6382,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 12 Mar 2025 16:01:10 GMT"
+          "Value": "Thu, 13 Mar 2025 14:09:16 GMT"
         },
         {
           "Name": "Cache-Control",

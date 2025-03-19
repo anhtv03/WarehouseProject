@@ -2,14 +2,19 @@
     Layout = "_Layout";
     ViewData["Title"] = "Danh sách nhà cung cấp";
 }
+@{
+    var cu = (UserViewDTO)ViewBag.CurrentUser;
+}
 
 <div class="main-content">
     <div class="page-title">
         <h2>Danh sách nhà cung cấp</h2>
         <div>
-            <button id="addSupplier" class="btn btn-primary" onclick="CreateSupplier()">
-                <i class="fas fa-plus-circle"></i> Thêm nhà cung cấp
-            </button>
+            @if (cu.Role == 2) {
+                <button id="addSupplier" class="btn btn-primary" onclick="CreateSupplier()">
+                    <i class="fas fa-plus-circle"></i> Thêm nhà cung cấp
+                </button>
+            }
         </div>
     </div>
 
@@ -44,12 +49,11 @@
                             <th>Tên Nhà Cung Cấp</th>
                             <th>Số Điện Thoại</th>
                             <th>Email</th>
-                            <th>Địa chỉ</th>
+                            <th style="width:40%;">Địa chỉ</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in ViewBag.Suppliers)
-                        {
+                        @foreach (var item in ViewBag.Suppliers) {
                             <tr>
                                 <td></td>
                                 <td><a asp-action="Details" asp-controller="Supplier" asp-route-id="@item.SupplierId" class="text-primary">@item.Name</a></td>

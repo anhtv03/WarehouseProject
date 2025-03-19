@@ -66,6 +66,20 @@ namespace WarehouseProject.Controllers {
                 return BadRequest(ex.Message);
             }
         }
+        
+        [HttpPatch("{id}")]
+        public ActionResult UpdateStatus([FromRoute] int id, [FromBody] string status) {
+            try {
+                var result = _service.UpdateStatus(id, status);
+                if (result.isSuccess) {
+                    return Ok(result.message);
+                } else {
+                    return BadRequest(result.message);
+                }
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id) {

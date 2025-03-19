@@ -3,6 +3,9 @@
     ViewData["Title"] = "Chi tiết danh mục sản phẩm";
 }
 @model Category
+@{
+    var cu = (UserViewDTO)ViewBag.CurrentUser;
+}
 
 <div class="main-content">
     <div class="page-title">
@@ -11,9 +14,11 @@
             <a asp-action="Index" asp-controller="Category" class="btn btn-outline-secondary me-2">
                 <i class="fas fa-arrow-left"></i> Quay lại
             </a>
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal">
-                <i class="fas fa-trash"></i> Xóa
-            </button>
+            @if (cu.Role == 2) {
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal">
+                    <i class="fas fa-trash"></i> Xóa
+                </button>
+            }
         </div>
     </div>
 
@@ -37,9 +42,11 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3 mt-4">
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fas fa-save"></i> Lưu thay đổi
-                                </button>
+                                @if (cu.Role == 2) {
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-save"></i> Lưu thay đổi
+                                    </button>
+                                }
                                 <button type="button" id="cancelCreate" class="btn btn-outline-secondary w-100 mt-2">
                                     <i class="fas fa-times"></i> Hủy chỉnh sửa
                                 </button>

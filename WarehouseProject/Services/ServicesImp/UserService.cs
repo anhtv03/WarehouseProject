@@ -65,6 +65,7 @@ namespace WarehouseProject.Services.ServicesImp {
                     Phone = u.Phone,
                     Email = u.Email,
                     Address = u.Address,
+                    Role = u.Role,
                     CreatedAt = u.CreatedAt,
                     UpdatedAt = u.UpdatedAt
                 }).AsQueryable();
@@ -93,6 +94,7 @@ namespace WarehouseProject.Services.ServicesImp {
                     Phone = u.Phone,
                     Email = u.Email,
                     Address = u.Address,
+                    Role = u.Role,
                     CreatedAt = u.CreatedAt,
                     UpdatedAt = u.UpdatedAt
                 }).FirstOrDefault(p => p.UserId == id);
@@ -117,6 +119,7 @@ namespace WarehouseProject.Services.ServicesImp {
                     Phone = user.Phone,
                     Email = user.Email,
                     Address = user.Address,
+                    Role = user.Role,
                     CreatedAt = user.CreatedAt,
                     UpdatedAt = user.UpdatedAt
                 };

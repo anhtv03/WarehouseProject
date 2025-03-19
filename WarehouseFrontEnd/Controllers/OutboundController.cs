@@ -4,13 +4,14 @@ using WarehouseFrontEnd.Models.DTOs;
 using WarehouseFrontEnd.Models.Entity;
 
 namespace WarehouseFrontEnd.Controllers {
-    public class InboundController : Controller {
+    public class OutboundController : Controller {
         private readonly string urlOrder = "https://localhost:5100/api/Orders";
         private readonly string urlProduct = "https://localhost:5100/api/Products";
         private readonly string urlCustomer = "https://localhost:5100/api/Customers";
         private readonly string urlSupplier = "https://localhost:5100/api/Suppliers";
         private readonly string urlUser = "https://localhost:5100/api/Users";
         private readonly string urlOD = "https://localhost:5100/api/OrderDetails";
+
 
         public async Task<IActionResult> Index(string? search) {
             UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
@@ -22,13 +23,13 @@ namespace WarehouseFrontEnd.Controllers {
 
             List<Order> list = new List<Order>();
             if (search != null) {
-                list = await LoadDataAsync<Order>($"{urlOrder}/Inbound?search={search}");
+                list = await LoadDataAsync<Order>($"{urlOrder}/Outbound?search={search}");
             } else {
-                list = await LoadDataAsync<Order>($"{urlOrder}/Inbound");
+                list = await LoadDataAsync<Order>($"{urlOrder}/Outbound");
             }
             var orderDetails = await LoadDataAsync<OrderDetail>($"{urlOD}");
 
-            ViewBag.Inbound = list
+            ViewBag.Outbound = list
                 .Select(i => new {
                     i.OrderId,
                     i.CreatedAt,
@@ -75,7 +76,6 @@ namespace WarehouseFrontEnd.Controllers {
             return View(order);
         }
 
-        // GET: InboundController/Create
         public async Task<IActionResult> Create() {
             UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
             if (current_user == null) {
@@ -86,28 +86,27 @@ namespace WarehouseFrontEnd.Controllers {
 
             var listUser = await LoadDataAsync<User>(urlUser);
 
-            ViewBag.Suppliers = await LoadDataAsync<Supplier>(urlSupplier);
+            ViewBag.Customer = await LoadDataAsync<Customer>(urlCustomer);
             ViewBag.Users = listUser.Where(x => x.Role != 1).ToList();
             return View();
         }
 
-        // POST: InboundController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(OrderDTO order, List<OrderDetailDTO> OrderItems) {
-            order.OrderType = "Inbound";
+            order.OrderType = "Outbound";
             using (HttpClient client = new HttpClient()) {
                 using (HttpResponseMessage res = await client.PostAsJsonAsync(urlOrder, order)) {
                     var data = await res.Content.ReadAsStringAsync();
                     if (res.IsSuccessStatusCode) {
                         OrderItems.ForEach(od => {
                             od.OrderId = int.Parse(data);
-                            od.orderType = "Inbound";
+                            od.orderType = "Outbound";
                         });
                         HttpResponseMessage resOD = await client.PostAsJsonAsync($"{urlOD}/Add", OrderItems);
 
                         if (resOD.IsSuccessStatusCode) {
-                            return RedirectToAction("Index", "Inbound");
+                            return RedirectToAction("Index", "Outbound");
                         } else {
                             ModelState.AddModelError("", await resOD.Content.ReadAsStringAsync());
                             return View("Create", ConvertToOrder(null, order));
@@ -121,7 +120,6 @@ namespace WarehouseFrontEnd.Controllers {
             }
         }
 
-        // GET: InboundController/Edit/5
         public async Task<IActionResult> Edit(int id) {
             UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
             if (current_user == null) {
@@ -144,12 +142,11 @@ namespace WarehouseFrontEnd.Controllers {
 
             ViewBag.totalCost = order?.OrderDetails.Sum(od => od.TotalPrice) ?? 0;
             ViewBag.totalProduct = order?.OrderDetails.Count ?? 0;
-            ViewBag.Suppliers = await LoadDataAsync<Supplier>(urlSupplier);
+            ViewBag.Customer = await LoadDataAsync<Customer>(urlCustomer);
             ViewBag.Users = listUser.Where(x => x.Role != 1).ToList();
             return View(order);
         }
 
-        // POST: InboundController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, OrderDTO order, List<OrderDetailDTO> OrderItems) {
@@ -160,7 +157,7 @@ namespace WarehouseFrontEnd.Controllers {
                 ViewBag.CurrentUser = current_user;
             }
 
-            order.OrderType = "Inbound";
+            order.OrderType = "Outbound";
             using (HttpClient client = new HttpClient()) {
                 using (HttpResponseMessage res = await client.PutAsJsonAsync($"{urlOrder}/{id}", order)) {
                     if (res.IsSuccessStatusCode) {
@@ -169,7 +166,7 @@ namespace WarehouseFrontEnd.Controllers {
                         if (resDelete.IsSuccessStatusCode) {
                             OrderItems.ForEach(od => {
                                 od.OrderId = id;
-                                od.orderType = "Inbound";
+                                od.orderType = "Outbound";
                             });
                             HttpResponseMessage resOD = await client.PostAsJsonAsync($"{urlOD}/Add", OrderItems);
 
@@ -219,7 +216,6 @@ namespace WarehouseFrontEnd.Controllers {
                 OrderType = dto.OrderType,
             };
         }
-
 
     }
 }

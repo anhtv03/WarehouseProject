@@ -17,7 +17,7 @@ namespace WarehouseFrontEnd.Controllers {
                     var data = await res.Content.ReadAsStringAsync();
                     if (res.IsSuccessStatusCode) {
                         HttpContext.Session.SetString("User", data);
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Product");
                     } else {
                         ModelState.AddModelError("", data);
                         return View("Index", user);

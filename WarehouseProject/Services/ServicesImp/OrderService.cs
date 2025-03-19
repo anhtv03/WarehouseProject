@@ -42,7 +42,7 @@ namespace WarehouseProject.Services.ServicesImp {
 
                 order.Code = "IG" + (5000 + order.OrderId);
                 _context.SaveChanges();
-                return (true, "Created Successful");
+                return (true, order.OrderId.ToString());
             } catch (Exception ex) {
                 return (false, ex.Message);
             }
@@ -79,6 +79,8 @@ namespace WarehouseProject.Services.ServicesImp {
                 var list = query.Include(x => x.User)
                                 .Include(x => x.Customer)
                                 .Include(x => x.Supplier)
+                                .Include(x => x.OrderDetails)
+                                .ThenInclude(p => p.Product)
                                 .ToList();
                 return list;
             } catch (Exception ex) {
@@ -92,6 +94,8 @@ namespace WarehouseProject.Services.ServicesImp {
                                     .Include(x => x.User)
                                     .Include(x => x.Customer)
                                     .Include(x => x.Supplier)
+                                    .Include(x => x.OrderDetails)
+                                    .ThenInclude(p => p.Product)
                                     .FirstOrDefault(p => p.OrderId == id);
                 return order;
             } catch (Exception ex) {
@@ -117,7 +121,7 @@ namespace WarehouseProject.Services.ServicesImp {
                     return (false, "Customer does not exist.");
                 }
 
-                order.Status = entity.Status;
+                order.Status = "pending";
                 order.CustomerId = entity.CustomerId;
                 order.SupplierId = entity.SupplierId;
                 order.Note = entity.Note;
@@ -129,5 +133,59 @@ namespace WarehouseProject.Services.ServicesImp {
                 return (false, ex.Message);
             }
         }
+
+        public (bool isSuccess, string message) UpdateStatus(int id, string status) {
+            try {
+                var order = _context.Orders
+                            .Include(o => o.OrderDetails)
+                            .FirstOrDefault(p => p.OrderId == id);
+
+                if (order == null) {
+                    return (false, "No order found to update.");
+                }
+                if (!status.Equals("processed") && !status.Equals("cancel")) {
+                    return (false, "Invalid status.");
+                }
+                if (order.Status == "cancel") {
+                    return (false, "Order has been canceled.");
+                }
+                if (order.Status == "processed") {
+                    return (false, "Order has been processed.");
+                }
+                if (order.OrderDetails == null || !order.OrderDetails.Any()) {
+                    return (false, "Order has no details to process.");
+                }
+
+                if (status == "processed") {
+                    var productIds = order.OrderDetails.Select(od => od.ProductId).ToList();
+                    var productsToUpdate = _context.Products
+                                            .Where(p => productIds.Contains(p.ProductId))
+                                            .ToList();
+                    foreach (var item in order.OrderDetails) {
+                        var product = productsToUpdate.FirstOrDefault(p => p.ProductId == item.ProductId);
+                        if (product == null) {
+                            return (false, $"Product with ID {item.ProductId} not found.");
+                        }
+
+                        if (order.OrderType.Equals("Inbound")) {
+                            product.Quantity += item.Quantity;
+                        } else if (order.OrderType.Equals("Outbound")) {
+                            if (product.Quantity < item.Quantity) {
+                                return (false, $"Không đủ hàng cho sản phẩm {product.Name}. Có sẵn: {product.Quantity}, Yêu cầu: {item.Quantity}");
+                            }
+                            product.Quantity -= item.Quantity;
+                        }
+                    }
+                }
+
+                order.Status = status;
+                order.UpdatedAt = DateTime.Now;
+                _context.SaveChanges();
+                return (true, "Update Successful");
+            } catch (Exception ex) {
+                return (false, ex.Message);
+            }
+        }
+
     }
 }

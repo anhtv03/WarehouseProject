@@ -51,7 +51,16 @@ namespace WarehouseProject {
                     options.JsonSerializerOptions.WriteIndented = true;
                 });
 
-            //------------------
+            // Add CORS policy
+            builder.Services.AddCors(options => {
+                options.AddPolicy("AllowAllOrigins", builder => {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
+            //build
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options => {
@@ -71,7 +80,7 @@ namespace WarehouseProject {
 
             app.UseAuthorization();
             app.UseSession();
-
+            app.UseCors("AllowAllOrigins");
             app.MapControllers();
 
             using (var scope = app.Services.CreateScope()) {

@@ -11442,23 +11442,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Shouma\\.nuget\\packages\\": {},
+    "C:\\Users\\PC\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\ASPNET & ANGULAR\\ASPNET\\ASPNET CORE WEB API\\WarehouseProject\\WarehouseFrontEnd\\WarehouseFrontEnd.csproj",
+      "projectUniqueName": "F:\\C#.NET\\PRN231\\WarehouseProject\\WarehouseFrontEnd\\WarehouseFrontEnd.csproj",
       "projectName": "WarehouseFrontEnd",
-      "projectPath": "D:\\ASPNET & ANGULAR\\ASPNET\\ASPNET CORE WEB API\\WarehouseProject\\WarehouseFrontEnd\\WarehouseFrontEnd.csproj",
-      "packagesPath": "C:\\Users\\Shouma\\.nuget\\packages\\",
-      "outputPath": "D:\\ASPNET & ANGULAR\\ASPNET\\ASPNET CORE WEB API\\WarehouseProject\\WarehouseFrontEnd\\obj\\",
+      "projectPath": "F:\\C#.NET\\PRN231\\WarehouseProject\\WarehouseFrontEnd\\WarehouseFrontEnd.csproj",
+      "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+      "outputPath": "F:\\C#.NET\\PRN231\\WarehouseProject\\WarehouseFrontEnd\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Shouma\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -11485,7 +11485,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net6.0": {
@@ -11543,7 +11543,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.103\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }

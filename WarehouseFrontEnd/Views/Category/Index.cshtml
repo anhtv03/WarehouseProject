@@ -2,14 +2,19 @@
     Layout = "_Layout";
     ViewData["Title"] = "Danh sách danh mục";
 }
+@{
+    var cu = (UserViewDTO)ViewBag.CurrentUser;
+}
 
 <div class="main-content">
     <div class="page-title">
         <h2>Danh sách danh mục sản phẩm</h2>
         <div>
-            <button id="addCategory" class="btn btn-primary" onclick="CreateCategory()">
-                <i class="fas fa-plus-circle"></i> Thêm danh mục
-            </button>
+            @if (cu.Role == 2) {
+                <button id="addCategory" class="btn btn-primary" onclick="CreateCategory()">
+                    <i class="fas fa-plus-circle"></i> Thêm danh mục
+                </button>
+            }
         </div>
     </div>
 
@@ -42,12 +47,11 @@
                         <tr>
                             <th style="width: 40px"></th>
                             <th>Tên Danh Mục</th>
-                            <th>Mô Tả</th>
+                            <th style="width:60%;">Mô Tả</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in ViewBag.Categories)
-                        {
+                        @foreach (var item in ViewBag.Categories) {
                             <tr>
                                 <td></td>
                                 <td><a asp-action="Details" asp-controller="Category" asp-route-id="@item.CategoryId" class="text-primary">@item.Name</a></td>

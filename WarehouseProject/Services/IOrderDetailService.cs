@@ -10,5 +10,6 @@ namespace WarehouseProject.Services {
         (bool isSuccess, string message) Create(OrderDetailDTO entity);
         (bool isSuccess, string message) Update(int id, OrderDetailDTO entity);
         (bool isSuccess, string message) Delete(int id);
+        (bool isSuccess, string message) DeleteByOrderId(int id);
     }
 }

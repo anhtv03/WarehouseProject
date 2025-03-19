@@ -26,7 +26,7 @@ namespace WarehouseProject.Models.Entity
         public virtual Customer? Customer { get; set; }
         public virtual Supplier? Supplier { get; set; }
         public virtual User? User { get; set; }
-        [JsonIgnore]
+        //[JsonIgnore]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

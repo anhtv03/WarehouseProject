@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "_Layout";
-    ViewData["Title"] = "Chi tiết đơn nhập hàng";
+    ViewData["Title"] = "Chi tiết đơn hàng";
 }
 @model Order
 @{
@@ -9,7 +9,7 @@
 
 <div class="main-content">
     <div class="po-header">
-        <a asp-action="Index" asp-controller="Inbound" class="btn btn-outline-secondary me-2">
+        <a asp-action="Index" asp-controller="Outbound" class="btn btn-outline-secondary me-2">
             <i class="fas fa-arrow-left"></i> Quay lại
         </a>
         <span class="po-number">@Model.Code</span>
@@ -24,7 +24,7 @@
         <div class="action-buttons">
             @if (cu.Role == 2) {
                 @if (Model.Status == "pending") {
-                    <button class="action-button" onclick="EditInbound(@Model.OrderId)">
+                    <button class="action-button" onclick="EditOutbound(@Model.OrderId)">
                         <i class="fas fa-edit"></i> Sửa đơn
                     </button>
                 }
@@ -40,8 +40,8 @@
                     </button>
                 }
             }
-            <button class="action-button" onclick="CreateInbound()">
-                <i class="fas fa-boxes"></i> Nhập hàng
+            <button class="action-button" onclick="CreateOutbound()">
+                <i class="fas fa-boxes"></i> Đặt hàng
             </button>
         </div>
     </div>
@@ -113,7 +113,7 @@
             <div>
                 <div class="po-section">
                     <div class="po-section-header">
-                        Nhà cung cấp
+                        Khách hàng
                     </div>
                     <div class="supplier-info">
                         <div class="supplier-name">
@@ -121,15 +121,15 @@
                                 <div class="supplier-avatar">
                                     <i class="fas fa-user"></i>
                                 </div>
-                                <span>@Model.Supplier?.Name</span>
+                                <span>@Model.Customer?.FullName</span>
                             </div>
                         </div>
                         <div class="supplier-detail">
-                            <strong>Thông tin nhà cung cấp</strong>
+                            <strong>Thông tin khách hàng</strong>
                         </div>
-                        <div class="supplier-detail">@Model.Supplier?.Email</div>
-                        <div class="supplier-detail">@Model.Supplier?.Phone</div>
-                        <div class="supplier-address">@Model.Supplier?.Address</div>
+                        <div class="supplier-detail">@Model.Customer?.Email</div>
+                        <div class="supplier-detail">@Model.Customer?.Phone</div>
+                        <div class="supplier-address">@Model.Customer?.Address</div>
                     </div>
                 </div>
 
@@ -143,28 +143,25 @@
                             <div class="supplier-detail">
                                 <strong>@Model.User?.FullName</strong>
                             </div>
-                            @* <select class="dropdown-select">
-                                <option selected>Nguyễn Huy Thái</option>
-                                <option>Nhân viên 1</option>
-                                <option>Nhân viên 2</option>
-                            </select> *@
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function CreateInbound(){
-            const productIndexUrl = '@Url.Action("Create", "Inbound")';
+        function CreateOutbound(){
+            const productIndexUrl = '@Url.Action("Create", "Outbound")';
             window.location.href = `${productIndexUrl}`;
         }
-        
-        function EditInbound(id){
-            const productIndexUrl = '@Url.Action("Edit", "Inbound")';
+
+        function EditOutbound(id){
+            const productIndexUrl = '@Url.Action("Edit", "Outbound")';
             window.location.href = productIndexUrl + '/' + id;
         }
 
@@ -178,7 +175,7 @@
                     contentType: "application/json",
                     data: data,
                     success: function (response) {
-                        const productIndexUrl = '@Url.Action("Details", "Inbound")';
+                        const productIndexUrl = '@Url.Action("Details", "Outbound")';
                         window.location.href = `${productIndexUrl}`;
                     },
                     error: function (xhr, status, error) {
@@ -199,13 +196,18 @@
                 contentType: "application/json",
                 data: data,
                 success: function (response) {
-                    const productIndexUrl = '@Url.Action("Details", "Inbound")';
+                    const productIndexUrl = '@Url.Action("Details", "Outbound")';
                     window.location.href = `${productIndexUrl}`;
                 },
                 error: function (xhr, status, error) {
                     console.log(xhr);
                     console.log(status);
                     console.error(error);
+                    Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: xhr.responseText || 'Đã xảy ra lỗi khi hủy đơn hàng!',
+                        });
                 }
             });
         });

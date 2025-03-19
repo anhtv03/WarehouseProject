@@ -1,20 +1,17 @@
 ﻿@{
     Layout = "_Layout";
-    ViewData["Title"] = "Danh sách đơn nhập hàng";
+    ViewData["Title"] = "Danh sách đơn hàng";
 }
 
 <div class="main-content">
     <div class="page-title">
-        <h2>Danh sách đơn nhập hàng</h2>
+        <h2>Danh sách đơn đặt hàng</h2>
         <div>
-           @*  <button class="btn btn-outline-secondary me-2">
+       @*      <button class="btn btn-outline-secondary me-2">
                 <i class="fas fa-file-export"></i> Xuất file
             </button> *@
-            @*             <button class="btn btn-outline-secondary me-3">
-                <i class="fas fa-file-import"></i> Nhập file
-            </button> *@
-            <button id="addProduct" class="btn btn-primary" onclick="CreateInbound()">
-                <i class="fas fa-plus-circle"></i> Tạo đơn nhập hàng
+            <button id="addProduct" class="btn btn-primary" onclick="CreateOutbound()">
+                <i class="fas fa-plus-circle"></i> Tạo đơn hàng
             </button>
         </div>
     </div>
@@ -51,18 +48,18 @@
                             <th>Ngày Khởi Tạo</th>
                             <th>Loại Đơn</th>
                             <th>Trạng Thái</th>
-                            <th>Nhà Cung Cấp</th>
+                            <th>Khách hàng</th>
                             <th>Số Lượng Đặt</th>
                             <th style="width: 15%;">Giá Trị Đơn</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in ViewBag.Inbound) {
+                        @foreach (var item in ViewBag.Outbound) {
                             <tr>
                                 <td></td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <a asp-action="Details" asp-controller="Inbound" asp-route-id="@item.OrderId" class="text-primary">
+                                        <a asp-action="Details" asp-controller="Outbound" asp-route-id="@item.OrderId" class="text-primary">
                                             @(item.Code)
                                         </a>
                                     </div>
@@ -80,7 +77,7 @@
                                 } else {
                                     <td class="text-warning">Đang chờ xử lý</td>
                                 }
-                                <td>@(item.Supplier?.Name ?? "Chưa có nhà cung cấp")</td>
+                                <td>@(item.Customer?.FullName ?? "Chưa có khách hàng")</td>
                                 <td>@(item.ProductCount)</td>
                                 <td>@item.TotalCost.ToString("N0") VND</td>
                             </tr>
@@ -96,12 +93,12 @@
 
 @section Scripts {
     <script>
-        function CreateInbound(){
-            const productIndexUrl = '@Url.Action("Create", "Inbound")';
+        function CreateOutbound(){
+            const productIndexUrl = '@Url.Action("Create", "Outbound")';
             window.location.href = `${productIndexUrl}`;
         }
 
-        const productIndexUrl = '@Url.Action("Index", "Inbound")';
+        const productIndexUrl = '@Url.Action("Index", "Outbound")';
         function getSearch(){
             const search = document.getElementById('searchText');
             const searchValue = search.value.trim();

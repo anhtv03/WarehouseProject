@@ -9,12 +9,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WarehouseFrontEnd.styles.css" asp-append-version="true" />
     <title>Quản lý kho</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </head>
 <body>
     <!-- Sidebar -->
@@ -23,12 +23,11 @@
             <img src="https://res.cloudinary.com/djj5gopcs/image/upload/v1741619010/logo_kho_koy0xz.png" alt="TVA" />
         </div>
         <ul class="sidebar-menu">
-            <li>
+           @*  <li>
                 <a asp-action="Index" asp-controller="Home">
                     <i class="fas fa-home"></i> Tổng quan
                 </a>
-            </li>
-            @* <li><i class="fas fa-shopping-cart"></i> Đơn hàng</li> *@
+            </li> *@
             <li>
                 <span><i class="fas fa-box"></i> Sản phẩm <i class="fas fa-chevron-down submenu-indicator"></i></span>
                 <ul class="submenu">
@@ -39,7 +38,6 @@
             <li class="">
                 <span><i class="fas fa-warehouse"></i> Quản lý kho <i class="fas fa-chevron-down submenu-indicator"></i></span>
                 <ul class="submenu">
-                    <li>Tồn kho</li>
                     <li><a asp-action="Index" asp-controller="Outbound">Xuất hàng</a></li>
                     <li><a asp-action="Index" asp-controller="Inbound">Nhập hàng</a></li>
                 </ul>
@@ -67,7 +65,7 @@
         <div class="search-bar"></div>
         <div class="avatar">
         </div>
-        <span class="ms-2">@currentUser?.FullName  <i class="fas fa-caret-down"></i></span>
+        <span class="ms-2">@currentUser?.FullName</span>
     </div>
 
 
@@ -79,7 +77,7 @@
     </div>
 
     <script>
-                document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             const menuItems = document.querySelectorAll('.sidebar-menu > li');
 
             menuItems.forEach(function(item) {
@@ -108,8 +106,6 @@
         });
     </script>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
