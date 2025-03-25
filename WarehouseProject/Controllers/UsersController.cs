@@ -61,7 +61,7 @@ namespace WarehouseProject.Controllers {
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public ActionResult Update([FromRoute] int id, [FromBody] UserDTO user) {
             try {
                 var result = _service.Update(id, user);

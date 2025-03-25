@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 using WarehouseFrontEnd.Models.DTOs;
 using WarehouseFrontEnd.Models.Entity;
 
+using Microsoft.EntityFrameworkCore;
+using System.Net.Http;
+
 namespace WarehouseFrontEnd.Controllers {
     public class OutboundController : Controller {
         private readonly string urlOrder = "https://localhost:5100/api/Orders";
@@ -193,6 +196,41 @@ namespace WarehouseFrontEnd.Controllers {
             }
             return View("Edit", ConvertToOrder(id, order));
         }
+
+        public async Task<IActionResult> ExportToExcel() {
+            UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
+            if (current_user == null) {
+                return RedirectToAction("Index", "Auth");
+            } else {
+                ViewBag.CurrentUser = current_user;
+            }
+
+            try {
+                using (HttpClient client = new HttpClient()) {
+                    using (HttpResponseMessage res = await client.GetAsync($"{urlOrder}/export/Outbound")) {
+                        using (HttpContent content = res.Content) {
+                            if (res.IsSuccessStatusCode) {
+                                var fileBytes = await res.Content.ReadAsByteArrayAsync();
+
+                                // Get the filename from the Content-Disposition header
+                                var contentDisposition = res.Content.Headers.ContentDisposition;
+                                string fileName = contentDisposition != null &&
+                                                    !string.IsNullOrEmpty(contentDisposition.FileName)
+                                                    ? contentDisposition.FileName.Trim('"')
+                                                    : "DanhSachDonHang.xlsx";
+
+                                return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                            } else {
+                                return RedirectToAction("Index", new { errorMessage = "Failed to export data" });
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                return RedirectToAction("Index", new { errorMessage = $"Error: {ex.Message}" });
+            }
+        }
+
 
         //=======================================================================================================     
         private async Task<List<T>> LoadDataAsync<T>(string url) {

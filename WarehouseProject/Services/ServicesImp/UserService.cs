@@ -26,7 +26,7 @@ namespace WarehouseProject.Services.ServicesImp {
                     Phone = entity.Phone,
                     Address = entity.Address,
                     Email = entity.Email,
-                    Role = 2,
+                    Role = entity.Role,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = null
                 };
@@ -47,8 +47,8 @@ namespace WarehouseProject.Services.ServicesImp {
                     return (false, "No found to delete.");
                 }
 
-                _context.Orders.Where(p => p.UserId == id).ToList().ForEach(x => x.UserId = null);
-                //_context.Users.Remove(user);
+                //_context.Orders.Where(p => p.UserId == id).ToList().ForEach(x => x.UserId = null);
+                _context.Users.Remove(user);
                 _context.SaveChanges();
                 return (true, "Delete successful");
             } catch (Exception ex) {
@@ -144,6 +144,7 @@ namespace WarehouseProject.Services.ServicesImp {
                 user.Phone = entity.Phone;
                 user.Address = entity.Address;
                 user.Email = entity.Email;
+                user.Role = entity.Role;
                 user.UpdatedAt = DateTime.Now;
 
                 _context.SaveChanges();

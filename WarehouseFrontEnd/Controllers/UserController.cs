@@ -1,50 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text;
 using WarehouseFrontEnd.Models.DTOs;
 using WarehouseFrontEnd.Models.Entity;
 
 namespace WarehouseFrontEnd.Controllers {
-    public class SupplierController : Controller {
-        private readonly string urlSupplier = "https://localhost:5100/api/Suppliers";
+    public class UserController : Controller {
+        private readonly string url = "https://localhost:5100/api/Users";
 
-        public async Task<IActionResult> Index(string? query) {
+
+        public async Task<IActionResult> Index() {
             UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
             if (current_user == null) {
                 return RedirectToAction("Index", "Auth");
             } else {
                 ViewBag.CurrentUser = current_user;
+
             }
 
-            List<Supplier> list = new List<Supplier>();
-            if (query != null) {
-                list = await LoadDataAsync<Supplier>($"{urlSupplier}?search={query}");
-            } else {
-                list = await LoadDataAsync<Supplier>(urlSupplier);
-            }
-            ViewBag.SearchValue = query ?? "";
-            ViewBag.Suppliers = list;
+            ViewBag.Users = await LoadDataAsync<UserViewDTO>(url);
             return View();
-        }
-
-        public async Task<IActionResult> Details(int id) {
-            UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
-            if (current_user == null) {
-                return RedirectToAction("Index", "Auth");
-            } else {
-                ViewBag.CurrentUser = current_user;
-            }
-
-            Supplier supplier = new Supplier();
-
-            using (HttpClient client = new HttpClient()) {
-                using (HttpResponseMessage res = await client.GetAsync($"{urlSupplier}/{id}")) {
-                    using (HttpContent content = res.Content) {
-                        string data = await content.ReadAsStringAsync();
-                        supplier = JsonConvert.DeserializeObject<Supplier>(data);
-                    }
-                }
-            }
-            return View(supplier);
         }
 
         public async Task<IActionResult> Create() {
@@ -59,7 +34,7 @@ namespace WarehouseFrontEnd.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SupplierDTO supplier) {
+        public async Task<IActionResult> Create(RegisterDTO user) {
             UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
             if (current_user == null) {
                 return RedirectToAction("Index", "Auth");
@@ -68,21 +43,42 @@ namespace WarehouseFrontEnd.Controllers {
             }
 
             using (HttpClient client = new HttpClient()) {
-                using (HttpResponseMessage res = await client.PostAsJsonAsync(urlSupplier, supplier)) {
+                using (HttpResponseMessage res = await client.PostAsJsonAsync(url + "/Register", user)) {
                     var data = await res.Content.ReadAsStringAsync();
                     if (res.IsSuccessStatusCode) {
-                        return RedirectToAction("Index", "Supplier");
+                        return RedirectToAction("Index", "User");
                     } else {
                         ModelState.AddModelError("", data);
-                        return View("Create", ConvertToSupplier(null, supplier));
+                        return View("Create", ConvertToSupplier(null, user));
                     }
                 }
             }
         }
 
+        public async Task<IActionResult> Details(int id) {
+            UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
+            if (current_user == null) {
+                return RedirectToAction("Index", "Auth");
+            } else {
+                ViewBag.CurrentUser = current_user;
+            }
+
+            UserViewDTO user = new UserViewDTO();
+
+            using (HttpClient client = new HttpClient()) {
+                using (HttpResponseMessage res = await client.GetAsync($"{url}/{id}")) {
+                    using (HttpContent content = res.Content) {
+                        string data = await content.ReadAsStringAsync();
+                        user = JsonConvert.DeserializeObject<UserViewDTO>(data);
+                    }
+                }
+            }
+            return View(user);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, SupplierDTO supplier) {
+        public async Task<IActionResult> Edit(int id, UserDTO user) {
             UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
             if (current_user == null) {
                 return RedirectToAction("Index", "Auth");
@@ -91,13 +87,16 @@ namespace WarehouseFrontEnd.Controllers {
             }
 
             using (HttpClient client = new HttpClient()) {
-                using (HttpResponseMessage res = await client.PutAsJsonAsync($"{urlSupplier}/{id}", supplier)) {
+                var json = JsonConvert.SerializeObject(user);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                using (HttpResponseMessage res = await client.PatchAsync($"{url}/{id}", content)) {
                     var data = await res.Content.ReadAsStringAsync();
                     if (res.IsSuccessStatusCode) {
-                        return View("Details", ConvertToSupplier(id, supplier));
+                        return View("Details", ConvertToUser(id, user));
                     } else {
                         ModelState.AddModelError("", data);
-                        return View("Details", ConvertToSupplier(null, supplier));
+                        return View("Details", ConvertToUser(null, user));
                     }
                 }
             }
@@ -112,23 +111,22 @@ namespace WarehouseFrontEnd.Controllers {
             }
 
             using (HttpClient client = new HttpClient()) {
-                HttpResponseMessage res = await client.DeleteAsync($"{urlSupplier}/{id}");
+                HttpResponseMessage res = await client.DeleteAsync($"{url}/{id}");
                 if (res.IsSuccessStatusCode) {
-                    return RedirectToAction("Index", "Supplier");
+                    return RedirectToAction("Index", "User");
                 } else {
-                    Supplier supplier = new Supplier();
+                    UserViewDTO user = new UserViewDTO();
                     ModelState.AddModelError("", "An error occurred while processing your request.");
-                    using (var getResponse = await client.GetAsync($"{urlSupplier}/{id}")) {
+                    using (var getResponse = await client.GetAsync($"{url}/{id}")) {
                         if (getResponse.IsSuccessStatusCode) {
                             var jsonString = await getResponse.Content.ReadAsStringAsync();
-                            supplier = JsonConvert.DeserializeObject<Supplier>(jsonString);
+                            user = JsonConvert.DeserializeObject<UserViewDTO>(jsonString);
                         }
                     }
-                    return View("Details", supplier);
+                    return View("Details", user);
                 }
             }
         }
-
         //=======================================================================================================
         private async Task<List<T>> LoadDataAsync<T>(string url) {
             List<T> dataList = new List<T>();
@@ -143,14 +141,29 @@ namespace WarehouseFrontEnd.Controllers {
             return dataList;
         }
 
-        private Supplier ConvertToSupplier(int? id, SupplierDTO dto) {
-            return new Supplier {
-                SupplierId = id ?? 0,
-                Name = dto.Name,
+        private UserViewDTO ConvertToSupplier(int? id, RegisterDTO dto) {
+            return new UserViewDTO {
+                UserId = id ?? 0,
+                FullName = dto.FullName,
+                Username = dto.Username,
                 Phone = dto.Phone,
                 Email = dto.Email,
                 Address = dto.Address,
+                Role = dto.Role,
             };
         }
+        
+        private UserViewDTO ConvertToUser(int? id, UserDTO dto) {
+            return new UserViewDTO {
+                UserId = id ?? 0,
+                FullName = dto.FullName,
+                Username = dto.Username,
+                Phone = dto.Phone,
+                Email = dto.Email,
+                Address = dto.Address,
+                Role = dto.Role,
+            };
+        }
+
     }
 }

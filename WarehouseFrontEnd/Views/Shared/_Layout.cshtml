@@ -23,35 +23,39 @@
             <img src="https://res.cloudinary.com/djj5gopcs/image/upload/v1741619010/logo_kho_koy0xz.png" alt="TVA" />
         </div>
         <ul class="sidebar-menu">
-           @*  <li>
-                <a asp-action="Index" asp-controller="Home">
-                    <i class="fas fa-home"></i> Tổng quan
-                </a>
-            </li> *@
-            <li>
-                <span><i class="fas fa-box"></i> Sản phẩm <i class="fas fa-chevron-down submenu-indicator"></i></span>
-                <ul class="submenu">
-                    <li><a asp-action="Index" asp-controller="Product">Danh sách sản phẩm</a></li>
-                    <li><a asp-action="Index" asp-controller="Category">Danh mục sản phẩm</a></li>
-                </ul>
-            </li>
-            <li class="">
-                <span><i class="fas fa-warehouse"></i> Quản lý kho <i class="fas fa-chevron-down submenu-indicator"></i></span>
-                <ul class="submenu">
-                    <li><a asp-action="Index" asp-controller="Outbound">Xuất hàng</a></li>
-                    <li><a asp-action="Index" asp-controller="Inbound">Nhập hàng</a></li>
-                </ul>
-            </li>
-            <li>
-                <a asp-action="Index" asp-controller="Supplier">
-                    <i class="fas fa-cog"></i>Nhà cung cấp
-                </a>
-            </li>
-            <li>
-                <a asp-action="Index" asp-controller="Customer">
-                    <i class="fas fa-address-book"></i>Khách hàng
-                </a>
-            </li>
+            @if (currentUser.Role == 2) {
+
+                <li>
+                    <span><i class="fas fa-box"></i> Sản phẩm <i class="fas fa-chevron-down submenu-indicator"></i></span>
+                    <ul class="submenu">
+                        <li><a asp-action="Index" asp-controller="Product">Danh sách sản phẩm</a></li>
+                        <li><a asp-action="Index" asp-controller="Category">Danh mục sản phẩm</a></li>
+                    </ul>
+                </li>
+                <li class="">
+                    <span><i class="fas fa-warehouse"></i> Quản lý kho <i class="fas fa-chevron-down submenu-indicator"></i></span>
+                    <ul class="submenu">
+                        <li><a asp-action="Index" asp-controller="Outbound">Xuất hàng</a></li>
+                        <li><a asp-action="Index" asp-controller="Inbound">Nhập hàng</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a asp-action="Index" asp-controller="Supplier">
+                        <i class="fas fa-cog"></i>Nhà cung cấp
+                    </a>
+                </li>
+                <li>
+                    <a asp-action="Index" asp-controller="Customer">
+                        <i class="fas fa-address-book"></i>Khách hàng
+                    </a>
+                </li>
+            } else if (currentUser.Role == 1) {
+                <li>
+                    <a asp-action="Index" asp-controller="User">
+                        <i class="fas fa-address-book"></i>Người dùng
+                    </a>
+                </li>
+            }
             <li>
                 <a asp-action="Logout" asp-controller="Auth">
                     <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
@@ -77,6 +81,7 @@
     </div>
 
     <script>
+
         document.addEventListener('DOMContentLoaded', function() {
             const menuItems = document.querySelectorAll('.sidebar-menu > li');
 

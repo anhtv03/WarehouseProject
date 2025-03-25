@@ -1,14 +1,14 @@
 ﻿@{
     Layout = "_Layout";
-    ViewData["Title"] = "Tạo nhà cung cấp mới";
+    ViewData["Title"] = "Tạo người dùng mới";
 }
-@model Supplier
+@model UserViewDTO
 
 <div class="main-content">
     <div class="page-title">
-        <h2>Tạo nhà cung cấp mới</h2>
+        <h2>Tạo người dùng mới</h2>
         <div>
-            <a asp-action="Index" asp-controller="Supplier" class="btn btn-outline-secondary me-2">
+            <a asp-action="Index" asp-controller="User" class="btn btn-outline-secondary me-2">
                 <i class="fas fa-arrow-left"></i> Quay lại
             </a>
         </div>
@@ -18,15 +18,16 @@
         <!-- Create Mode -->
         <div id="createMode" class="card">
             <div class="card-body">
-                <form id="createSupplierForm" asp-action="Create" asp-controller="Supplier" method="post">
+                <form id="createSupplierForm" asp-action="Create" asp-controller="User" method="post">
                     <div class="row">
                         <div class="col-md-8">
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label asp-for="Name" class="form-label">Tên nhà cung cấp</label>
-                                    <input type="text" class="form-control" asp-for="Name" required>
-                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                    <label asp-for="FullName" class="form-label">Tên người dùng</label>
+                                    <input type="text" class="form-control" asp-for="FullName" required>
+                                    <span asp-validation-for="FullName" class="text-danger"></span>
                                 </div>
+
                                 <div class="col-md-6">
                                     <label asp-for="Phone" class="form-label">Số điện thoại</label>
                                     <input class="form-control" asp-for="Phone">
@@ -46,14 +47,33 @@
                                     <span asp-validation-for="Address" class="text-danger"></span>
                                 </div>
                             </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="Username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" asp-for="Username" required>
+                                    <span asp-validation-for="Username" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label asp-for="Role" class="form-label">Nhà cung cấp</label>
+                                    <select class="form-select" asp-for="Role">
+                                        <option value="1">Chủ kho</option>
+                                        <option value="2">Nhân Viên</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="mb-3 mt-4">
                                 <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fas fa-save"></i> Tạo nhà cung cấp
+                                    <i class="fas fa-save"></i> Tạo người dùng mới
                                 </button>
                             </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 </form>

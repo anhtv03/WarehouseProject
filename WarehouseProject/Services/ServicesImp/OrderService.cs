@@ -1,7 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
+using System.Drawing;
 using WarehouseProject.Models.DTOs;
 using WarehouseProject.Models.Entity;
 using WarehouseProject.Util;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
+using System.IO;
 
 namespace WarehouseProject.Services.ServicesImp {
     public class OrderService : IOrderService {
@@ -12,6 +19,97 @@ namespace WarehouseProject.Services.ServicesImp {
         }
 
         //====================================================================================================
+        public (bool isSuccess, string message, byte[] fileBytes, string fileName) ExportToExcel(string orderType) {
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+
+            using (var package = new ExcelPackage()) {
+                var worksheet = package.Workbook.Worksheets.Add("Danh sách đơn hàng");
+
+                using (var range = worksheet.Cells["A1:H1"]) {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                    range.Style.Font.Color.SetColor(Color.Black);
+                    range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                }
+
+                worksheet.Cells[1, 1].Value = "Mã Đơn";
+                worksheet.Cells[1, 2].Value = "Ngày Khởi Tạo";
+                worksheet.Cells[1, 3].Value = "Loại Đơn";
+                worksheet.Cells[1, 4].Value = "Trạng Thái";
+                if (orderType.Equals("Outbound")) {
+                    worksheet.Cells[1, 5].Value = "Khách hàng";
+                } else {
+                    worksheet.Cells[1, 5].Value = "Nhà cung cấp";
+                }
+                worksheet.Cells[1, 6].Value = "Số Lượng Đặt";
+                worksheet.Cells[1, 7].Value = "Tên Sản Phẩm";
+                worksheet.Cells[1, 8].Value = "Giá Trị Đơn";
+
+                var outboundOrders = _context.Orders
+                                        .Include(o => o.Customer)
+                                        .Include(o => o.Supplier)
+                                        .Include(o => o.OrderDetails)
+                                        .ThenInclude(od => od.Product)
+                                        .Where(o => o.OrderType == orderType)
+                                        .OrderByDescending(o => o.CreatedAt)
+                                        .ToList();
+
+                int row = 2;
+                foreach (var order in outboundOrders) {
+                    worksheet.Cells[row, 1].Value = order.Code;
+                    worksheet.Cells[row, 2].Value = order.CreatedAt.ToString("dd/MM/yyyy");
+                    worksheet.Cells[row, 3].Value = order.OrderType == "Outbound" ? "Đơn Xuất" : "Đơn Nhập";
+
+                    worksheet.Cells[row, 4].Value = GetStatusText(order.Status);
+                    if (order.Status == "cancel") {
+                        worksheet.Cells[row, 4].Style.Font.Color.SetColor(Color.Red);
+                    } else if (order.Status == "processed") {
+                        worksheet.Cells[row, 4].Style.Font.Color.SetColor(Color.Green);
+                    } else {
+                        worksheet.Cells[row, 4].Style.Font.Color.SetColor(Color.Orange);
+                    }
+
+                    var totalCost = order.OrderDetails.Where(od => od.OrderId == order.OrderId)
+                                                      .Sum(od => od.TotalPrice);
+                    var totalQuantity = order.OrderDetails.Where(od => od.OrderId == order.OrderId)
+                                                           .Select(od => od.ProductId)
+                                                           .Distinct()
+                                                           .Count();
+                    var productName = string.Join(", ", order.OrderDetails
+                                            .Where(od => od.OrderId == order.OrderId && od.Product != null)
+                                            .Select(od => od.Product.Name)
+                                            .Distinct()
+                                            .ToList());
+
+                    if (orderType.Equals("Outbound")) {
+                        worksheet.Cells[row, 5].Value = order.Customer?.FullName ?? "Chưa có khách hàng";
+                    } else {
+                        worksheet.Cells[row, 5].Value = order.Supplier?.Name ?? "Chưa có nhà cung cấp";
+                    }
+                    worksheet.Cells[row, 6].Value = totalQuantity;
+                    worksheet.Cells[row, 7].Value = productName;
+                    worksheet.Cells[row, 8].Value = totalCost;
+                    worksheet.Cells[row, 8].Style.Numberformat.Format = "#,##0";
+                    worksheet.Cells[row, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+
+                    row++;
+                }
+                worksheet.Cells.AutoFitColumns();
+
+                using (var range = worksheet.Cells[1, 1, row - 1, 8]) {
+                    range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                }
+
+                string fileName = $"DanhSachDonHang_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+                var fileBytes = package.GetAsByteArray();
+                return (true, "Export successful", fileBytes, fileName);
+            }
+        }
+
         public (bool isSuccess, string message) Create(OrderDTO entity) {
             try {
                 if (entity.SupplierId.HasValue && !_context.Suppliers.Any(c => c.SupplierId == entity.SupplierId)) {
@@ -187,5 +285,12 @@ namespace WarehouseProject.Services.ServicesImp {
             }
         }
 
+        private string GetStatusText(string status) {
+            return status switch {
+                "cancel" => "Đã hủy",
+                "processed" => "Đã xử lý",
+                _ => "Đang chờ xử lý"
+            };
+        }
     }
 }

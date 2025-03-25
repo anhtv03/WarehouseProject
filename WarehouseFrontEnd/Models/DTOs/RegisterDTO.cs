@@ -19,5 +19,9 @@ namespace WarehouseFrontEnd.Models.DTOs {
 
         [StringLength(500, ErrorMessage = "Address cannot exceed 500 characters.")]
         public string? Address { get; set; }
+
+        [Required(ErrorMessage = "Role is required.")]
+        public int? Role { get; set; }
+
     }
 }

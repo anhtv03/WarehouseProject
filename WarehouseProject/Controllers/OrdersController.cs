@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WarehouseProject.Models.DTOs;
 using WarehouseProject.Services;
+using WarehouseProject.Services.ServicesImp;
 using WarehouseProject.Util;
 
 namespace WarehouseProject.Controllers {
@@ -22,6 +23,21 @@ namespace WarehouseProject.Controllers {
         public ActionResult GetOutbound([FromQuery] string? search) {
             var list = _service.GetAll(OrderTypeEnum.Outbound, search);
             return Ok(list);
+        }
+
+        [HttpGet("export/{orderType}")]
+        public IActionResult ExportToExcel([FromRoute] string orderType) {
+            if (!orderType.Equals("Inbound") && !orderType.Equals("Outbound")) {
+                return BadRequest("Order type must be Inbound or Outbound");
+            }
+
+            var (isSuccess, message, fileBytes, fileName) = _service.ExportToExcel(orderType);
+
+            if (!isSuccess) {
+                return BadRequest(message);
+            }
+
+            return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
 
         [HttpGet("{id}")]
@@ -66,7 +82,7 @@ namespace WarehouseProject.Controllers {
                 return BadRequest(ex.Message);
             }
         }
-        
+
         [HttpPatch("{id}")]
         public ActionResult UpdateStatus([FromRoute] int id, [FromBody] string status) {
             try {

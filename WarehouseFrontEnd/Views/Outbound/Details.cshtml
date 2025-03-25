@@ -22,23 +22,20 @@
             <span class="status-badge-warning">Đang chờ xử lý</span>
         }
         <div class="action-buttons">
-            @if (cu.Role == 2) {
-                @if (Model.Status == "pending") {
-                    <button class="action-button" onclick="EditOutbound(@Model.OrderId)">
-                        <i class="fas fa-edit"></i> Sửa đơn
-                    </button>
-                }
-                @if (Model.Status == "pending") {
-                    <button id="cancel" class="action-button">
-                        <i class="fas fa-ban"></i> Hủy đơn
-                    </button>
-                }
-            } else {
-                @if (Model.Status == "pending") {
-                    <button id="process" class="action-button">
-                        <i class="fa-solid fa-check"></i> Xác nhận đã nhận hàng
-                    </button>
-                }
+            @if (Model.Status == "pending") {
+                <button id="process" class="action-button">
+                    <i class="fa-solid fa-check"></i> Xác nhận đã nhận hàng
+                </button>
+            }
+            @if (Model.Status == "pending") {
+                <button class="action-button" onclick="EditOutbound(@Model.OrderId)">
+                    <i class="fas fa-edit"></i> Sửa đơn
+                </button>
+            }
+            @if (Model.Status == "pending") {
+                <button id="cancel" class="action-button">
+                    <i class="fas fa-ban"></i> Hủy đơn
+                </button>
             }
             <button class="action-button" onclick="CreateOutbound()">
                 <i class="fas fa-boxes"></i> Đặt hàng

@@ -1,0 +1,120 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Chi tiết người dùng";
+}
+@model UserViewDTO
+@{
+    var cu = (UserViewDTO)ViewBag.CurrentUser;
+}
+
+<div class="main-content">
+    <div class="page-title">
+        <h2>Chi tiết người dùng</h2>
+        <div>
+            <a asp-action="Index" asp-controller="User" class="btn btn-outline-secondary me-2">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
+                @if (@Model.UserId != cu.UserId) {
+
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSupplierModal">
+                        <i class="fas fa-trash"></i> Xóa
+                    </button>
+                }
+
+            
+        </div>
+    </div>
+
+    <div class="product-detail">
+        <!-- Edit Mode -->
+        <div id="editMode" class="card">
+            <div class="card-body">
+                <form id="editSupplierForm" asp-action="Edit" asp-controller="User" asp-route-id="@Model.UserId" method="post">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="FullName" class="form-label">Tên người dùng</label>
+                                    <input type="text" class="form-control" asp-for="FullName" readonly>
+                                    <span asp-validation-for="FullName" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label asp-for="Phone" class="form-label">Số điện thoại</label>
+                                    <input class="form-control" asp-for="Phone" readonly>
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="Email" class="form-label">Email</label>
+                                    <input class="form-control" asp-for="Email" readonly>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="Address" class="form-label">Địa chỉ</label>
+                                    <input class="form-control" asp-for="Address" readonly>
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="Username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" asp-for="Username" readonly>
+                                    <span asp-validation-for="Username" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label asp-for="Role" class="form-label">Nhà cung cấp</label>
+                                    <select class="form-select" asp-for="Role">
+                                        <option value="1">Chủ kho</option>
+                                        <option value="2">Nhân Viên</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3 mt-4">
+                                    @if (@Model.UserId != cu.UserId) {
+
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-save"></i> Lưu thay đổi
+                                        </button>
+                                    }
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteSupplierModal" tabindex="-1" aria-labelledby="deleteSupplierModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteSupplierModalLabel">Xác nhận xóa người dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa người dùng <strong>@Model.FullName</strong>?</p>
+                <p class="text-danger">Hành động này không thể hoàn tác.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form asp-action="Delete" asp-controller="User" asp-route-id="@Model.UserId" method="get">
+                    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

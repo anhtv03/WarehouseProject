@@ -75,6 +75,13 @@ namespace WarehouseFrontEnd.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductDTO product, IFormFile? file) {
+            UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
+            if (current_user == null) {
+                return RedirectToAction("Index", "Auth");
+            } else {
+                ViewBag.CurrentUser = current_user;
+            }
+
             using (HttpClient client = new HttpClient()) {
                 using (var content = new MultipartFormDataContent()) {
                     var newContent = CreateContentProduct(product, file, content);
@@ -127,6 +134,13 @@ namespace WarehouseFrontEnd.Controllers {
         }
 
         public async Task<IActionResult> Delete(int id) {
+            UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
+            if (current_user == null) {
+                return RedirectToAction("Index", "Auth");
+            } else {
+                ViewBag.CurrentUser = current_user;
+            }
+
             using (HttpClient client = new HttpClient()) {
                 HttpResponseMessage res = await client.DeleteAsync($"{urlProduct}/{id}");
                 if (res.IsSuccessStatusCode) {

@@ -60,6 +60,13 @@ namespace WarehouseFrontEnd.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryDTO category) {
+            UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
+            if (current_user == null) {
+                return RedirectToAction("Index", "Auth");
+            } else {
+                ViewBag.CurrentUser = current_user;
+            }
+
             using (HttpClient client = new HttpClient()) {
                 using (HttpResponseMessage res = await client.PostAsJsonAsync(urlCategory, category)) {
                     var data = await res.Content.ReadAsStringAsync();
@@ -76,6 +83,13 @@ namespace WarehouseFrontEnd.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CategoryDTO category) {
+            UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
+            if (current_user == null) {
+                return RedirectToAction("Index", "Auth");
+            } else {
+                ViewBag.CurrentUser = current_user;
+            }
+
             using (HttpClient client = new HttpClient()) {
                 using (HttpResponseMessage res = await client.PutAsJsonAsync($"{urlCategory}/{id}", category)) {
                     var data = await res.Content.ReadAsStringAsync();
@@ -90,6 +104,13 @@ namespace WarehouseFrontEnd.Controllers {
         }
 
         public async Task<IActionResult> Delete(int id) {
+            UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
+            if (current_user == null) {
+                return RedirectToAction("Index", "Auth");
+            } else {
+                ViewBag.CurrentUser = current_user;
+            }
+
             using (HttpClient client = new HttpClient()) {
                 HttpResponseMessage res = await client.DeleteAsync($"{urlCategory}/{id}");
                 if (res.IsSuccessStatusCode) {

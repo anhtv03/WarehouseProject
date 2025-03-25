@@ -7,9 +7,9 @@
     <div class="page-title">
         <h2>Danh sách đơn đặt hàng</h2>
         <div>
-       @*      <button class="btn btn-outline-secondary me-2">
+            <button class="btn btn-outline-secondary me-2" onclick="exportToExcel()">
                 <i class="fas fa-file-export"></i> Xuất file
-            </button> *@
+            </button>
             <button id="addProduct" class="btn btn-primary" onclick="CreateOutbound()">
                 <i class="fas fa-plus-circle"></i> Tạo đơn hàng
             </button>
@@ -96,6 +96,11 @@
         function CreateOutbound(){
             const productIndexUrl = '@Url.Action("Create", "Outbound")';
             window.location.href = `${productIndexUrl}`;
+        }
+
+        function exportToExcel() {
+            const exportUrl = '@Url.Action("ExportToExcel", "Outbound")';
+            window.location.href = exportUrl;
         }
 
         const productIndexUrl = '@Url.Action("Index", "Outbound")';

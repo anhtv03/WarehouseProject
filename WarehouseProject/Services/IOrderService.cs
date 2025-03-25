@@ -10,5 +10,6 @@ namespace WarehouseProject.Services {
         (bool isSuccess, string message) Update(int id, OrderDTO entity);
         (bool isSuccess, string message) UpdateStatus(int id, string status);
         (bool isSuccess, string message) Delete(int id);
+        (bool isSuccess, string message, byte[] fileBytes, string fileName) ExportToExcel(string orderType);
     }
 }
