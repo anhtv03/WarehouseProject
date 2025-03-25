@@ -24,22 +24,24 @@ namespace WarehouseProject.Util {
 
         public void AddAdmin() {
             if (!_context.Users.Any()) {
-                User user = new User {
-                    Username = "admin",
-                    Password = BCrypt.Net.BCrypt.HashPassword("admin"),
-                    FullName = "Admin",
-                    Role = 1
-                };
-                User staff = new User {
-                    Username = "staff01",
-                    Password = BCrypt.Net.BCrypt.HashPassword("123456"),
-                    FullName = "Staff",
-                    Address = "HCM",
-                    Phone = "0123456789",
-                    Email = "staff@gmail.com",
+                List<User> users = new List<User> {
+                    new User {
+                        Username = "admin",
+                        Password = BCrypt.Net.BCrypt.HashPassword("admin"),
+                        FullName = "Admin",
+                        Role = 1
+                    },
+                    new User {
+                        Username = "staff01",
+                        Password = BCrypt.Net.BCrypt.HashPassword("123456"),
+                        FullName = "Staff",
+                        Address = "HCM",
+                        Phone = "0123456789",
+                        Email = "staff@gmail.com",
                     Role = 2
+                    }
                 };
-                _context.Users.Add(user);
+                _context.Users.AddRange(users);
                 _context.SaveChanges();
             }
         }
