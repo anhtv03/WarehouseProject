@@ -24,6 +24,16 @@ namespace WarehouseProject {
                 return new Cloudinary(new Account(config.CloudName, config.ApiKey, config.ApiSecret));
             });
 
+            //setup gemini AI
+            builder.Services.AddSingleton<IGeminiChatService, GeminiChatService>(provider => {
+                var configuration = provider.GetRequiredService<IConfiguration>();
+                var geminiConfig = configuration.GetSection("Gemini");
+                return new GeminiChatService(
+                    geminiConfig["ProjectId"],
+                    geminiConfig["Location"]
+                );
+            });
+
             // Register seed data
             builder.Services.AddScoped<SeedData>();
 
