@@ -1,31 +1,61 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using WarehouseProject.Models.Entity;
+﻿using Microsoft.AspNetCore.Mvc;
+using WarehouseProject.Models.DTOs;
 using WarehouseProject.Services;
 
 namespace WarehouseProject.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class GeminiChatController : ControllerBase {
-        private readonly IGeminiChatService _geminiService;
+        private readonly IGeminiChatService _geminiChatService;
 
-        public GeminiChatController(IGeminiChatService geminiService) {
-            _geminiService = geminiService;
+        public GeminiChatController(IGeminiChatService geminiChatService) {
+            _geminiChatService = geminiChatService;
         }
 
-        [HttpPost("chat")]
-        public async Task<IActionResult> Chat([FromBody] ChatRequest request) {
-            var response = await _geminiService.StartConversationAsync(request.Prompt);
-            return Ok(response);
+        [HttpPost("start")]
+        public async Task<ActionResult<ChatResponse>> StartConversation([FromBody] string initialPrompt) {
+            if (string.IsNullOrEmpty(initialPrompt)) {
+                return BadRequest("Prompt ban đầu không được để trống.");
+            }
+
+            try {
+                var response = await _geminiChatService.StartConversationAsync(initialPrompt);
+                return Ok(response);
+            } catch (Exception ex) {
+                return StatusCode(500, $"Lỗi khi bắt đầu cuộc trò chuyện: {ex.Message}");
+            }
         }
 
         [HttpPost("continue")]
-        public async Task<IActionResult> ContinueChat([FromBody] ContinueChatRequest request) {
-            var response = await _geminiService.ContinueConversationAsync(
-                request.ConversationId,
-                request.UserMessage
-            );
-            return Ok(response);
+        public async Task<ActionResult<ChatResponse>> ContinueConversation([FromQuery] string conversationId, [FromBody] string userMessage) {
+            if (string.IsNullOrEmpty(conversationId)) {
+                return BadRequest("ConversationId không được để trống.");
+            }
+
+            if (string.IsNullOrEmpty(userMessage)) {
+                return BadRequest("Tin nhắn của người dùng không được để trống.");
+            }
+
+            try {
+                var response = await _geminiChatService.ContinueConversationAsync(conversationId, userMessage);
+                return Ok(response);
+            } catch (Exception ex) {
+                return StatusCode(500, $"Lỗi khi tiếp tục cuộc trò chuyện: {ex.Message}");
+            }
+        }
+
+        [HttpPost("generate-text")]
+        public async Task<ActionResult<string>> GenerateText([FromBody] string prompt) {
+            if (string.IsNullOrEmpty(prompt)) {
+                return BadRequest("Prompt không được để trống.");
+            }
+
+            try {
+                var response = await _geminiChatService.GenerateTextAsync(prompt);
+                return Ok(response);
+            } catch (Exception ex) {
+                return StatusCode(500, $"Lỗi khi tạo văn bản: {ex.Message}");
+            }
         }
 
     }

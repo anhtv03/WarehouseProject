@@ -3,13 +3,7 @@ using Newtonsoft.Json;
 using WarehouseFrontEnd.Models.DTOs;
 
 namespace WarehouseFrontEnd.Controllers {
-    public class HomeController : Controller {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger) {
-            _logger = logger;
-        }
-
+    public class ChatbotController : Controller {
         public IActionResult Index() {
             UserViewDTO current_user = JsonConvert.DeserializeObject<UserViewDTO>(HttpContext.Session.GetString("User"));
             if (current_user == null) {
@@ -18,10 +12,7 @@ namespace WarehouseFrontEnd.Controllers {
                 ViewBag.CurrentUser = current_user;
             }
 
-
-            return View(current_user);
+            return View();
         }
-
-
     }
 }

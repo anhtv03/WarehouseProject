@@ -1,0 +1,97 @@
+﻿@{
+    ViewData["Title"] = "Gemini Chatbot";
+    Layout = "_Layout";
+}
+
+<div class="chatbot-container mt-3">
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-messages" id="chatMessages">
+            <!-- Tin nhắn sẽ được hiển thị ở đây -->
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." />
+            <button id="sendButton">Gửi</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            let conversationId = null;
+
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', sender);
+                messageDiv.textContent = text;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function sendMessage() {
+                const message = messageInput.value.trim();
+                if (!message) return;
+
+                // Hiển thị tin nhắn người dùng
+                addMessage(message, 'user');
+                messageInput.value = '';
+                sendButton.disabled = true;
+
+                // Hiển thị trạng thái đang nhập
+                const loadingMessage = document.createElement('div');
+                loadingMessage.classList.add('message', 'loading');
+                loadingMessage.textContent = 'Đang nhập...';
+                chatMessages.appendChild(loadingMessage);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                const apiUrl = conversationId
+                    ? `https://localhost:5100/api/GeminiChat/continue?conversationId=${encodeURIComponent(conversationId)}`
+                    : 'https://localhost:5100/api/GeminiChat/start';
+
+                const requestData = conversationId
+                    ? message
+                    : message; 
+
+                $.ajax({
+                    url: apiUrl,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(requestData),
+                    success: function(response) {
+                        // Xóa tin nhắn đang nhập
+                        chatMessages.removeChild(loadingMessage);
+
+                        // Lưu conversation ID nếu chưa có
+                        if (!conversationId) {
+                            conversationId = response.conversationId;
+                        }
+
+                        // Hiển thị phản hồi từ AI
+                        addMessage(response.response, 'assistant');
+                        sendButton.disabled = false;
+                    },
+                    error: function(xhr, status, error) {
+                        // Xóa tin nhắn đang nhập
+                        chatMessages.removeChild(loadingMessage);
+
+                        // Hiển thị thông báo lỗi
+                        addMessage('Đã có lỗi xảy ra. Vui lòng thử lại.', 'assistant');
+                        sendButton.disabled = false;
+                        console.error('Error:', error);
+                    }
+                });
+            }
+
+            // Sự kiện gửi tin nhắn
+            sendButton.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+}

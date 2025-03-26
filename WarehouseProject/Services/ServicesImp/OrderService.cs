@@ -7,8 +7,6 @@ using WarehouseProject.Models.Entity;
 using WarehouseProject.Util;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using System.Drawing;
-using System.IO;
 
 namespace WarehouseProject.Services.ServicesImp {
     public class OrderService : IOrderService {

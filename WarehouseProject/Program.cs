@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.OpenApi.Any;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace WarehouseProject {
     public class Program {
@@ -25,13 +26,11 @@ namespace WarehouseProject {
             });
 
             //setup gemini AI
-            builder.Services.AddSingleton<IGeminiChatService, GeminiChatService>(provider => {
+            builder.Services.AddScoped<IGeminiChatService, GeminiChatService>(provider => {
                 var configuration = provider.GetRequiredService<IConfiguration>();
-                var geminiConfig = configuration.GetSection("Gemini");
-                return new GeminiChatService(
-                    geminiConfig["ProjectId"],
-                    geminiConfig["Location"]
-                );
+                var cache = provider.GetRequiredService<IDistributedCache>();
+                var apiKey = configuration["Gemini:ApiKey"];
+                return new GeminiChatService(apiKey, cache);
             });
 
             // Register seed data

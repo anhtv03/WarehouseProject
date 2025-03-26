@@ -4,7 +4,8 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-	</PropertyGroup>
+	  <UserSecretsId>789aaa12-30d1-4eee-822c-ef2394030693</UserSecretsId>
+  </PropertyGroup>
 
 	<ItemGroup>
 	  <None Remove="Services\ServicesImp\2xpu5vr0.0ek~" />
@@ -13,7 +14,7 @@
 	<ItemGroup>
 		<PackageReference Include="EPPlus" Version="5.8.0" />
 		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-		<PackageReference Include="Google.Cloud.AIPlatform.V1" Version="3.24.0" />
+		<PackageReference Include="Google_GenerativeAI" Version="2.4.6" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
