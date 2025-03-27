@@ -9,6 +9,6 @@ namespace WarehouseProject.Services {
         List<Product> GetProductByCategory(int id);
         Task<(bool isSuccess, string message)> CreateAsync(ProductDTO entity, IFormFile? image);
         Task<(bool isSuccess, string message)> UpdateAsync(int id, ProductDTO entity, IFormFile? image);
-        (bool isSuccess, string message) Delete(int id);
+        Task<(bool isSuccess, string message)> DeleteAsync(int id);
     }
 }

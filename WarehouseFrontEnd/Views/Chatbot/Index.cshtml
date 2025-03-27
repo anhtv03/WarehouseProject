@@ -35,12 +35,10 @@
                 const message = messageInput.value.trim();
                 if (!message) return;
 
-                // Hiển thị tin nhắn người dùng
                 addMessage(message, 'user');
                 messageInput.value = '';
                 sendButton.disabled = true;
 
-                // Hiển thị trạng thái đang nhập
                 const loadingMessage = document.createElement('div');
                 loadingMessage.classList.add('message', 'loading');
                 loadingMessage.textContent = 'Đang nhập...';
@@ -61,23 +59,17 @@
                     contentType: 'application/json',
                     data: JSON.stringify(requestData),
                     success: function(response) {
-                        // Xóa tin nhắn đang nhập
                         chatMessages.removeChild(loadingMessage);
 
-                        // Lưu conversation ID nếu chưa có
                         if (!conversationId) {
                             conversationId = response.conversationId;
                         }
 
-                        // Hiển thị phản hồi từ AI
                         addMessage(response.response, 'assistant');
                         sendButton.disabled = false;
                     },
                     error: function(xhr, status, error) {
-                        // Xóa tin nhắn đang nhập
                         chatMessages.removeChild(loadingMessage);
-
-                        // Hiển thị thông báo lỗi
                         addMessage('Đã có lỗi xảy ra. Vui lòng thử lại.', 'assistant');
                         sendButton.disabled = false;
                         console.error('Error:', error);
@@ -85,7 +77,6 @@
                 });
             }
 
-            // Sự kiện gửi tin nhắn
             sendButton.addEventListener('click', sendMessage);
             messageInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {

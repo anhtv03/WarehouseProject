@@ -21,7 +21,7 @@ namespace WarehouseProject {
 
             //setup cloudinary
             builder.Services.AddSingleton(provider => {
-                var config = builder.Configuration.GetSection("Cloudinary").Get<CloundinarySettings>();
+                var config = provider.GetRequiredService<IConfiguration>().GetSection("Cloudinary").Get<CloundinarySettings>();
                 return new Cloudinary(new Account(config.CloudName, config.ApiKey, config.ApiSecret));
             });
 
@@ -29,8 +29,9 @@ namespace WarehouseProject {
             builder.Services.AddScoped<IGeminiChatService, GeminiChatService>(provider => {
                 var configuration = provider.GetRequiredService<IConfiguration>();
                 var cache = provider.GetRequiredService<IDistributedCache>();
+                var context = provider.GetRequiredService<WarehouseDBContext>();
                 var apiKey = configuration["Gemini:ApiKey"];
-                return new GeminiChatService(apiKey, cache);
+                return new GeminiChatService(apiKey, cache, context);
             });
 
             // Register seed data

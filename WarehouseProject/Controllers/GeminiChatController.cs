@@ -44,19 +44,5 @@ namespace WarehouseProject.Controllers {
             }
         }
 
-        [HttpPost("generate-text")]
-        public async Task<ActionResult<string>> GenerateText([FromBody] string prompt) {
-            if (string.IsNullOrEmpty(prompt)) {
-                return BadRequest("Prompt không được để trống.");
-            }
-
-            try {
-                var response = await _geminiChatService.GenerateTextAsync(prompt);
-                return Ok(response);
-            } catch (Exception ex) {
-                return StatusCode(500, $"Lỗi khi tạo văn bản: {ex.Message}");
-            }
-        }
-
     }
 }

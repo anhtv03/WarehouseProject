@@ -7,6 +7,7 @@ using WarehouseProject.Models.Entity;
 using System.Text;
 using System.Security.Cryptography;
 using static System.Net.Mime.MediaTypeNames;
+using System.Drawing;
 
 namespace WarehouseProject.Services.ServicesImp {
     public class ProductService : IProductService {
@@ -60,7 +61,7 @@ namespace WarehouseProject.Services.ServicesImp {
             }
         }
 
-        public (bool isSuccess, string message) Delete(int id) {
+        public async Task<(bool isSuccess, string message)> DeleteAsync(int id) {
             try {
                 var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
 
@@ -68,7 +69,9 @@ namespace WarehouseProject.Services.ServicesImp {
                     return (false, "No found to delete.");
                 }
 
-                //product.IsActive = false;
+                if (!string.IsNullOrEmpty(product.Images)) {
+                    await DeleteImageAsync(product.Images);
+                }
 
                 _context.OrderDetails.RemoveRange(_context.OrderDetails.Where(p => p.ProductId == id));
                 _context.Products.Remove(product);

@@ -69,9 +69,9 @@ namespace WarehouseProject.Controllers {
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete([FromRoute] int id) {
+        public async Task<IActionResult> Delete([FromRoute] int id) {
             try {
-                var result = _service.Delete(id);
+                var result = await _service.DeleteAsync(id);
                 if (result.isSuccess) {
                     return Ok(result.message);
                 } else {
